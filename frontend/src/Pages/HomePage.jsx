@@ -27,6 +27,8 @@ const HomePage = () => {
 
 const { resources} = resourceStore();
 
+
+
 const options = {
   responsive: true,
   plugins: {
@@ -40,6 +42,10 @@ const options = {
   },
 };
 const {getResource} = resourceStore();
+const updateChart = async() =>{
+  const d = await getResource();
+  console.log('ResourceData',d.data)
+}
 
 
 const labels = resources.map((data) => data.goal);
@@ -49,7 +55,7 @@ const [chartData, setChartData] = useState({
   datasets: [
     {
       label: "Goals Processed",
-      data: resources.map((data)=> data.resName),
+      data: resources.map((data)=> data.task.length),
       backgroundColor:[
         "rgb(224, 255, 255)"
       ],
@@ -61,6 +67,7 @@ const [chartData, setChartData] = useState({
 
   return (
     <div>
+      <button onClick={updateChart}>Update</button>
       <Bar data={chartData} options={options}></Bar>
     </div>
   )

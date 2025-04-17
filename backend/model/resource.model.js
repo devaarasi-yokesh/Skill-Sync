@@ -5,12 +5,8 @@ const resourceSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    resName:{
+    task:{
         type: Array,
-        required: true
-    },
-    resLink:{
-        type: String,
         required: true
     }
 },

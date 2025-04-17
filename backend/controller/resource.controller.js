@@ -16,7 +16,7 @@ export const getResource = async(req,res) =>{
 export const createResource = async(req,res) =>{
     const resource = req.body;
     console.log(resource)
-    if(!resource.goal || !resource.resName || !resource.resLink){
+    if(!resource.goal || !resource.task ){
         return res.status(400).json({success:false, message:"Please provide all fields"});
     }
 

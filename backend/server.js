@@ -28,10 +28,17 @@ app.use(express.json());
 
 app.use('/api/res',resourceRoutes);
 
+const artciles = await fetch('https://dev.to/api/articles',{
+  headers:{
+    "User-Agent":"MyDemoApp"
+  }
+});
+// console.log(await artciles.json())
 
 app.get('/profile', requiresAuth(), (req, res) => {
   res.send(JSON.stringify(req.oidc.user));
 });
+
 
 
 

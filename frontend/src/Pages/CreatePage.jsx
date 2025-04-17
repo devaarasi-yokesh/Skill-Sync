@@ -6,19 +6,22 @@ const CreatePage = () => {
 
 const [newRes, setNewRes] = useState({
   goal:"",
-  resName:"",
-  resLink:""
+  task:""
 });
 
-const {createResource, resources} = resourceStore();
-console.log('Resources',resources)
+
+
+const {createResource, resources, getResource} = resourceStore();
+
+
+
 const handleAdd = async() => {
  const data = await createResource(newRes);
- console.log(data.message)
+ console.log(data.message,resources)
+ 
  setNewRes({
   goal:"",
-  resName:"",
-  resLink:""
+  task:""
  })
 }
 
@@ -38,23 +41,14 @@ const handleAdd = async() => {
   <div className="md:flex md:items-center mb-6">
     <div className="md:w-1/3">
       <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" htmlFor="inline-password">
-        Resource
+        Initial Task
       </label>
     </div>
     <div className="md:w-2/3">
-      <input onChange={(e) => setNewRes({...newRes,resName:e.target.value})} value={newRes.resName} className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="inline-password"  placeholder="https://python_beginner_course"/>
-    </div>
+      <input onChange={(e) => setNewRes({...newRes,task:e.target.value})} value={newRes.task} className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"   placeholder="https://python_beginner_course"/>
+    </div >
   </div>
-  <div className="md:flex md:items-center mb-6">
-    <div className="md:w-1/3">
-      <label className="block text-gray-500 font-bold md:text-right mb-1 md:mb-0 pr-4" htmlFor="inline-password">
-        Resource Link
-      </label>
-    </div>
-    <div className="md:w-2/3">
-      <input onChange={(e) => setNewRes({...newRes,resLink:e.target.value})} value={newRes.resLink} className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" id="inline-password"  placeholder="https://python_beginner_course"/>
-    </div>
-  </div>
+  
   <div className="md:flex md:items-center mb-6">
     <div className="md:w-1/3"></div>
     <label className="md:w-2/3 block text-gray-500 font-bold">

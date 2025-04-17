@@ -1,12 +1,12 @@
 
 import {create} from 'zustand'
-import { getResource } from '../../../backend/controller/resource.controller';
+
 
 export const resourceStore = create((set)=>({
     resources: [],
     setResources: (resources) => set({ resources }), 
     createResource: async(newRes) => {
-        if(!newRes.goal || !newRes.resName || !newRes.resLink){
+        if(!newRes.goal || !newRes.task ){
             return {success:false, message:"Please fill in all fields."}
         }
         const res = await fetch('api/res',{
@@ -32,7 +32,8 @@ export const resourceStore = create((set)=>({
         })
 
         const data = await res.json();
-        console.log(data.data)
-        set((state)=> ({resources:[data.data]}))
+        set((state)=> ({resources:data.data}))
+        console.log(data.data,resourceStore.resources)
+        return{success:true, message: "Product created successfully",data:data.data};
     }
 }))
