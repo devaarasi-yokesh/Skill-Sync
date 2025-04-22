@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -25,8 +26,12 @@ ChartJS.register(
 
 const HomePage = () => {
 
-const { resources} = resourceStore();
+const { resources,getResource} = resourceStore();
 
+
+useEffect(() => {
+   getResource()
+},[getResource]);
 
 
 const options = {
@@ -41,11 +46,7 @@ const options = {
     },
   },
 };
-const {getResource} = resourceStore();
-const updateChart = async() =>{
-  const d = await getResource();
-  console.log('ResourceData',d.data)
-}
+
 
 
 const labels = resources.map((data) => data.goal);
@@ -67,7 +68,7 @@ const [chartData, setChartData] = useState({
 
   return (
     <div>
-      <button onClick={updateChart}>Update</button>
+      <button className='w-44 cursor-pointer'><Link to='/create'>+ add goal</Link></button>
       <Bar data={chartData} options={options}></Bar>
     </div>
   )

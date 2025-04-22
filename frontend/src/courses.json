@@ -1,0 +1,33 @@
+[
+    {
+      "title": "Learn React Basics",
+      "topic": "react",
+      "url": "https://example.com/react-course",
+      "level": "beginner"
+    },
+    {
+      "title": "Mastering Python",
+      "topic": "python",
+      "url": "https://example.com/python-course",
+      "level": "intermediate"
+    },
+    {
+      "title": "Intro to Machine Learning",
+      "topic": "ml",
+      "url": "https://example.com/ml-course",
+      "level": "advanced"
+    },
+    {
+      "title": "HTML & CSS Crash Course",
+      "topic": "html",
+      "url": "https://example.com/html-course",
+      "level": "beginner"
+    },
+    {
+        "title": "Java Crash Course",
+        "topic": "java",
+        "url": "https://example.com/html-course",
+        "level": "beginner"
+      }
+  ]
+  

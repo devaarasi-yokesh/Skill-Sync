@@ -28,12 +28,14 @@ app.use(express.json());
 
 app.use('/api/res',resourceRoutes);
 
-const artciles = await fetch('https://dev.to/api/articles',{
+const artciles = await fetch('https://dev.to/api/articles?tag=learnjava',{
   headers:{
     "User-Agent":"MyDemoApp"
   }
 });
-// console.log(await artciles.json())
+
+const data = await artciles.json()
+//  console.log(data.map((v)=>[v.title,v.url]))
 
 app.get('/profile', requiresAuth(), (req, res) => {
   res.send(JSON.stringify(req.oidc.user));

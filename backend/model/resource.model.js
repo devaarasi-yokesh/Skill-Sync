@@ -8,6 +8,10 @@ const resourceSchema = new mongoose.Schema({
     task:{
         type: Array,
         required: true
+    },
+    completedTasks:{
+        type: Array,
+        required: true
     }
 },
 {

@@ -39,7 +39,7 @@ export const updateResource = async(req,res) =>{
     }
     try{
         const updatedResource = await Resource.findByIdAndUpdate(id, resource, {new:true});
-        return res.status(200).json({success:true, message:"Resource updated successfully"});
+        return res.status(200).json({success:true, message:"Resource updated successfully",data:updatedResource});
     }catch(error){
         console.error(error);
         res.status(400).json({success:false, message: 'Product not found '})
