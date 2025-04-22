@@ -8,6 +8,7 @@ import {
   Title,
   Tooltip,
   Legend,
+  scales,
 } from 'chart.js';
 import {Bar} from 'react-chartjs-2'
 import { useState } from 'react';
@@ -36,6 +37,7 @@ useEffect(() => {
 
 const options = {
   responsive: true,
+  maintainAspectRatio: false,
   plugins: {
     legend: {
       position: 'top' ,
@@ -44,6 +46,10 @@ const options = {
       display: true,
       text: 'Chart.js Bar Chart',
     },
+    scales:{
+      x:{stacked: true,ticks:{font:{size: 14}},barThickness:50},
+      y:{stacked: true, beginAtZero: true}
+    }
   },
 };
 
@@ -55,13 +61,20 @@ const [chartData, setChartData] = useState({
   labels,
   datasets: [
     {
-      label: "Goals Processed",
+      label: "Remaining",
       data: resources.map((data)=> data.task.length),
-      backgroundColor:[
-        "rgb(224, 255, 255)"
-      ],
+      backgroundColor:"#f817171",
       borderColor: "gray",
-      borderWidth: 2
+      borderWidth: 2,
+      stack:'Stack 0'
+    },
+    {
+      label: "Completed",
+      data: resources.map((data)=> data.completedTasks.length),
+      backgroundColor:'#4ade80',
+      borderColor: "gray",
+      borderWidth: 2,
+      stack:'Stack 0'
     }
   ]
 })
@@ -69,7 +82,10 @@ const [chartData, setChartData] = useState({
   return (
     <div>
       <button className='w-44 cursor-pointer'><Link to='/create'>+ add goal</Link></button>
+      <div  style={{ width: '400px', height: '300px' }}>
       <Bar data={chartData} options={options}></Bar>
+      </div>
+      
     </div>
   )
 }

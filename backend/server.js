@@ -34,7 +34,6 @@ const artciles = await fetch('https://dev.to/api/articles?tag=learnjava',{
   }
 });
 
-const data = await artciles.json()
 //  console.log(data.map((v)=>[v.title,v.url]))
 
 app.get('/profile', requiresAuth(), (req, res) => {

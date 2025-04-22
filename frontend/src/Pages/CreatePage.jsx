@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import {resourceStore} from '../store/resource.store'
-
+import { nanoid } from 'nanoid'
 
 
 const CreatePage = () => {
@@ -9,9 +9,10 @@ const [newRes, setNewRes] = useState({
   goal:"",
   task:{
     name:"",
-    deadline:""
+    deadline:"",
+    id:"",
   },
-  completedTasks:0,
+  completedTasks:[],
 });
 
 
@@ -21,14 +22,13 @@ const {createResource, resources} = resourceStore();
 
 const handleInput = (e) =>{
   if(e.target.type !== 'date'){
-    let temp = newRes.task;
-    temp.name = e.target.value;
-    setNewRes({...newRes,temp})
+    newRes.task.name = e.target.value;
+    newRes.task.id = nanoid();
+    setNewRes({...newRes})
   }
   else{
-    let temp = newRes.task;
-    temp.deadline = e.target.value;
-    setNewRes({...newRes,temp})
+    newRes.task.deadline = e.target.value;
+    setNewRes({...newRes})
   }
   
 }
@@ -43,9 +43,10 @@ const handleAdd = async() => {
   goal:"",
   task:{
     name:"",
-    deadline:""
+    deadline:"",
+    id:""
   },
-  completedTasks:0,
+  completedTasks:[],
  })
 }
 

@@ -50,7 +50,7 @@ export const resourceStore = create((set)=>({
         set((state)=>({
             resources: state.resources.map((resource)=> (resource.id === id) ? data.data: resource),
         }));
-        return {success:true, message:data.message}
+        return {success:true, message:data.message,data:data.data}
     },
     deleteResource: async(id)=>{
         const res = await fetch(`api/res/${id}`, {

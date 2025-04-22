@@ -1,81 +1,115 @@
 import React,{useState,useEffect} from 'react'
 import { resourceStore } from '../store/resource.store';
 import { IoMdAdd } from "react-icons/io";
+import { nanoid } from 'nanoid';
 
 
 
 
 const GoalCard = () => {
 
-    const {resources,getResource,updateResource} = resourceStore();
-    const [taskName, setTaskName] = useState(null);
-    const [task, setTask] = useState({name:"",deadline:""});
+    const {resources,getResource,updateResource,deleteResource} = resourceStore();
+    const [task, setTask] = useState({name:"",deadline:"",id:""});
     const [addTask, setAddTask] = useState(false);
     const [hideAddButton, setHideAddButton] = useState(true);
-    const [addToStack,setAddToStack] = useState(false);
-    const [courses, setCourses] = useState([]);
+    const [goalId, setGoalId] = useState(null);
+    const [target, setTarget] = useState(null);
  
+
 useEffect(() => {
-   getResource();
-   // let result = fetch('/courses.json')
-   //  .then((res)=> res.json())
-   //  .then((data) => setCourses(data))
-   // console.log(result,'res')
+   getResource(); 
+  
 },[getResource]);
 
 
-// const filtered = courses.filter((course)=> course.topic.toLowerCase().includes(resources.goal.toLowerCase()))
-// console.log(filtered,'filtered sources')
 
 const updateTaskValue = async({data})=>{
-   data.task = [...data.task,task]
+   console.log(nanoid())
+   let temp = {...task,id:nanoid()};
+   setTask(temp)
+   data.task = [...data.task,temp]
+   console.log(data.task,task,temp)
   
   
-   // temp = {...data,task}
-   
+   setAddTask(false);
+   setHideAddButton(true);
+
    await updateResource(data._id,data)
+   setTask({
+      name:"",
+      deadline:"",
+      id:"",
+   });
+   
 }
 
-const handleTaskValue = async({data}) =>{
-console.log(data.goal)
-const res = await updateResource(data._id,task);
-console.log(res.message,res.data)
+
+const toggleTask = (id) => {
+   
+   setAddTask(true);
+   setHideAddButton(false);
+   
+   setTarget(id
+)
+  ;
+  console.log(id,target)
 }
 
+
+const deleteTaskValue = async(data,val) => {
+   data.task = data.task.filter((task) => task.name !== val.name  );
+   data.completedTasks = [...data.completedTasks,val]
+   
+   console.log(data,"Testing here")
+   const response = await updateResource(data._id,data);
+   console.log(response.message,response.data)
+   if(!response.data.task){
+      await deleteResource(data._id)
+   }
+}
 
   return (
     <>
      {resources.map((data,index)=>{
+     
     return(
-    <div className='border-b border-dashed m-5'>
+   
+     <div className='border-b border-dashed m-5'>
      <h3 className='font-bold text-3xl uppercase m-8 text-gray-400'>{data.goal}</h3>
      <div className='mx-8 my-9'>
      <p className='font-bold text-xl'>Tasks</p>
-     <p className='text-lg font-thin my-4' style={{
-            color: taskName === index ? "blue" : "black",
-            textDecoration: taskName === index ? "underline" : "none",
-            cursor: "pointer"
-          }}>
-       <input type="checkbox" onChange={()=>setTaskName(index)} value={data.task} key={index}/> {data.task ? data.task.map((val)=>{return( val.name)}) : 0}
-     </p> 
-     {addToStack &&<> <input type='checkbox'></input> {task.name}</>}
+
+     {data.task ? data.task.map((val,i)=> {
+      return(
+         <>
+         <p className='text-lg font-thin my-4'>
+         <input type="checkbox" onChange={()=>deleteTaskValue(data,val)} value={val.name} key={i}/> {val.name ? val.name : 'No tasks'}
+         </p> 
+         </>
+      )
+     }) : 'No tasks added'}
+     
      {hideAddButton && <>
-     <button onClick={()=>{setAddTask(true);setHideAddButton(false)}}><IoMdAdd /></button> <br/>
+     <button onClick={()=>toggleTask(data._id)}><IoMdAdd /></button> <br/>
      </>}
-     {addTask && <>
-     <label htmlFor="task">task</label> &nbsp;
-     <input type="text" className='border mb-3' id='task' onChange={(e)=> setTask({...task,name:e.target.value})} value={task.name}></input> <br/>
-     <label htmlFor="deadline">deadline</label> &nbsp;
-     <input type="date" className='border' id='deadline'  onChange={(e)=> setTask({...task,deadline:e.target.value})} value={task.deadline}></input> <br/>
-     <button className='border mt-3 px-2 rounded' onClick={()=>updateTaskValue({data})}>add</button>
-     </>} <br/>
-     {/* <input type='checkbox'></input> &nbsp; */}
+
+   
+      {addTask &&  (target === data._id) ? (<>
+      <label htmlFor="task">task</label> &nbsp;
+      <input type="text" className='border mb-3' id='task' onChange={(e)=> setTask({...task,name:e.target.value})} value={task.name}></input> <br/>
+      <label htmlFor="deadline">deadline</label> &nbsp;
+      <input type="date" className='border' id='deadline'  onChange={(e)=> setTask({...task,deadline:e.target.value})} value={task.deadline}></input> <br/>
+      <button className='border mt-3 px-2 rounded' onClick={()=>updateTaskValue({data})}>add</button>
+      </>) : ''} 
+
+     
+     
      </div>
      
      <div className='mx-8'>
      <p className='font-bold text-xl'>Resources</p>
      <p className='text-lg font-thin my-4'>
-        {data.task.name}
+       resource
      </p>
      </div>
      
