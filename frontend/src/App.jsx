@@ -4,7 +4,7 @@ import './styles.css'
 import HomePage from './Pages/HomePage'
 import CreatePage from './Pages/CreatePage'
 import NavBar from './elements/NavBar'
-import Goals from './pages/Goals'
+import Goals from './Pages/Goals'
 
 function App() {
 
