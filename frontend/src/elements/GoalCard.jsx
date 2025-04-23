@@ -82,8 +82,8 @@ const deleteTaskValue = async(data,val) => {
      {data.task ? data.task.map((val,i)=> {
       return(
          <>
-         <p className='text-lg font-thin my-4'>
-         <input type="checkbox" onChange={()=>deleteTaskValue(data,val)} value={val.name} key={i}/> {val.name ? val.name : 'No tasks'}
+         <p className='text-lg font-thin my-4' key={val.id}>
+         <input type="checkbox" onChange={()=>deleteTaskValue(data,val)} key={i}/> {val.name ? val.name : 'No tasks'}
          </p> 
          </>
       )

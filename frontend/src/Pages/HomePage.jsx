@@ -81,7 +81,7 @@ const [chartData, setChartData] = useState({
 
   return (
     <div>
-      <button className='w-44 cursor-pointer'><Link to='/create'>+ add goal</Link></button>
+      <button className='w-full cursor-pointer text-gray-900'><Link to='/create'>+ add goal</Link></button>
       <div  style={{ width: '400px', height: '300px' }}>
       <Bar data={chartData} options={options}></Bar>
       </div>
