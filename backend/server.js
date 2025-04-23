@@ -3,10 +3,13 @@ import express from 'express'
 import { connectDB } from "./config/db.js";
 import dotenv from 'dotenv'
 import resourceRoutes from './routes/resource.route.js'
+import path from 'path'
 
 const app = express();
 const { auth, requiresAuth } = pkg;
 dotenv.config();
+
+const __dirname = path.resolve();
 
 const config = { 
     authRequired: false,
@@ -28,22 +31,17 @@ app.use(express.json());
 
 app.use('/api/res',resourceRoutes);
 
-const artciles = await fetch('https://dev.to/api/articles?tag=learnjava',{
-  headers:{
-    "User-Agent":"MyDemoApp"
-  }
-});
+if(process.env.NODE_ENV === 'production'){
+  app.use(express.static(path.join(__dirname, "frontend","dist")));
 
-//  console.log(data.map((v)=>[v.title,v.url]))
+  app.get(/(.*)/, (req, res) => {
+        res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"))
+  })
+}
 
 app.get('/profile', requiresAuth(), (req, res) => {
   res.send(JSON.stringify(req.oidc.user));
 });
-
-
-
-
-
 
 
 app.listen(3000, ()=> {
