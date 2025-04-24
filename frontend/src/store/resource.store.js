@@ -23,6 +23,23 @@ export const resourceStore = create((set)=>({
 
         return{success:true, message: "Product created successfully"};
     },
+    createGoal: async(newGoal) => {
+        if(!newGoal.goal  ){
+            return {success:false, message:"Please fill in all fields."}
+        }
+        const res = await fetch('api/res/goal',{
+            method: 'POST',
+            headers:{
+                "Content-Type": "application/json"
+            },
+            body:JSON.stringify(newGoal)
+        })
+       
+        const data = await res.json();
+        console.log(data.data)
+
+        return{success:true, message: "Product created successfully",data:data.data};
+    },
     getResource: async()=>{
         const res = await fetch('api/res',{
             method:'GET',
@@ -33,7 +50,6 @@ export const resourceStore = create((set)=>({
 
         const data = await res.json();
         set((state)=> ({resources:data.data}))
-        console.log(data.data,resourceStore.resources)
         return{success:true, message: "Product created successfully",data:data.data};
     },
     updateResource: async(id,updatedResource)=>{
@@ -66,6 +82,42 @@ export const resourceStore = create((set)=>({
         set((state)=>({
             resources: state.resources.filter((resource)=> (resource.id !== id)),
         }));
-        return {success:true, message:data.message}
-    }
+        return {success:true, message:data.message,data:data.val}
+    },
+    getArticle: async(article)=>{
+        const res = await fetch(`api/res/article/${article}`,{
+            method:'GET',
+            headers:{
+                "Content-Type": "application/json"
+            },
+        })
+
+        const data = await res.json();
+        return{success:true, message: "Product created successfully",data:data.data};
+    },
+    getVideo: async(tag)=>{
+        const res = await fetch(`api/res/video/${tag}`,{
+            method:'GET',
+            headers:{
+                "Content-Type": "application/json"
+            },
+        })
+
+        const data = await res.json();
+        return{success:true, message: "Product created successfully",data:data.data};
+    },
+    getCourse:async (query) =>{
+        // const key = process.env.RAPID_KEY
+        const options = {
+          method: 'GET',
+          headers: {
+            'X-RapidAPI-Key': `13046074cfmsh9bc3acc4a49a0a4p1212f7jsnea7c76d95adf`,
+            'X-RapidAPI-Host': 'coursera-data.p.rapidapi.com'
+          }
+        };
+        const res = await fetch (`https://collection-for-coursera-courses.p.rapidapi.com/rapidapi/course/get_institution.php`, options);
+      const data = await res.json();
+        console.log(data)
+      }
+      
 }));

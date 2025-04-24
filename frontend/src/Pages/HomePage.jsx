@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom'
+import { data, Link } from 'react-router-dom'
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -12,6 +12,8 @@ import {
 } from 'chart.js';
 import {Bar} from 'react-chartjs-2'
 import { useState } from 'react';
+import { Text } from '@chakra-ui/react';
+import { isBefore, isToday, isTomorrow, compareAsc, parseISO } from 'date-fns';
 import { resourceStore } from '../store/resource.store';
 
 ChartJS.register(
@@ -28,7 +30,7 @@ ChartJS.register(
 const HomePage = () => {
 
 const { resources,getResource} = resourceStore();
-
+const [upcomingTasks, setUpcomingTasks] = useState([]);
 
 useEffect(() => {
    getResource()
@@ -56,7 +58,6 @@ const options = {
 
 
 const labels = resources.map((data) => data.goal);
-console.log(labels)
 const [chartData, setChartData] = useState({
   labels,
   datasets: [
@@ -78,12 +79,47 @@ const [chartData, setChartData] = useState({
     }
   ]
 })
+let tasks = resources.map((item)=> item.task);
+
+const updateUpcomingTasks = ()=>{
+  const dateObj = new Date();
+  //  const currentDate = `${dateObj.getFullYear()}-${dateObj.getMonth()}-${dateObj.getDate()}`;
+  //  console.log(currentDate,dateObj,tasks,resources)
+
+  const tasksArray = tasks[0];
+  tasksArray.forEach(task => {
+    console.log(task.deadline)
+  });
+
+  const currentDate = new Date();
+const upcomingTasks = tasksArray.filter(task => {
+  const taskDeadline = new Date(task.deadline);
+  return taskDeadline >= currentDate;
+});
+upcomingTasks.sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
+
+
+setUpcomingTasks(upcomingTasks)
+return upcomingTasks;
+
+}
 
   return (
     <div>
       <button className='w-full cursor-pointer text-gray-900'><Link to='/create'>+ add goal</Link></button>
       <div  style={{ width: '400px', height: '300px' }}>
       <Bar data={chartData} options={options}></Bar>
+      </div>
+      <div>
+        <button onClick={updateUpcomingTasks}>try</button>
+        <Text>Upcoming Tasks</Text>
+        {upcomingTasks.map((task)=>{
+          return(
+            <>
+            <p>{task.name}</p>
+            </>
+          )
+        })}
       </div>
       
     </div>

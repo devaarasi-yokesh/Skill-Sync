@@ -1,35 +1,37 @@
-import pkg from "express-openid-connect";
+
+import { auth } from 'express-oauth2-jwt-bearer';
 import express from 'express'
 import { connectDB } from "./config/db.js";
+import cors from 'cors'
 import dotenv from 'dotenv'
 import resourceRoutes from './routes/resource.route.js'
 import path from 'path'
 
 const app = express();
-const { auth, requiresAuth } = pkg;
 dotenv.config();
 
 const __dirname = path.resolve();
 
-const config = { 
-    authRequired: false,
-    auth0Logout: true,
-    secret: 'a long, randomly-generated string stored in env',
-    baseURL: 'http://localhost:3000',
-    clientID: 'PhHyluJoI99epnscIUI1bTguVMCP2eJl',
-    issuerBaseURL: 'https://dev-twhhjyo4gr0nr6br.us.auth0.com'
-};
-
-app.use(auth(config));
+const audience = process.env.AUDIENCE;
+const baseurl = process.env.BASEURL;
 
 app.use(express.json());
-
-// app.get('/', (req, res)=> {
-//     res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
-// });
-
+app.use(cors())
 
 app.use('/api/res',resourceRoutes);
+
+console.log(audience)
+const jwtCheck = auth({
+  audience: audience,
+  issuerBaseURL: baseurl,
+  tokenSigningAlg: 'RS256'
+});
+
+app.use('/protected',jwtCheck);
+
+app.get('/protected', function (req, res) {
+  res.send('Secured Resource');
+});
 
 if(process.env.NODE_ENV === 'production'){
   app.use(express.static(path.join(__dirname, "frontend","dist")));
@@ -38,10 +40,6 @@ if(process.env.NODE_ENV === 'production'){
         res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"))
   })
 }
-
-app.get('/profile', requiresAuth(), (req, res) => {
-  res.send(JSON.stringify(req.oidc.user));
-});
 
 
 app.listen(3000, ()=> {
