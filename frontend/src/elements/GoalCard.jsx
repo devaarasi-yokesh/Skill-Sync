@@ -2,7 +2,7 @@ import React,{useState,useEffect} from 'react'
 import { resourceStore } from '../store/resource.store';
 import { IoMdAdd } from "react-icons/io";
 import { nanoid } from 'nanoid';
-import { Button } from '@chakra-ui/react';
+import { Button, Heading, Box, Text,Input, Flex, Image } from '@chakra-ui/react';
 import { data } from 'react-router-dom';
 
 
@@ -97,9 +97,6 @@ const deleteTaskValue = async(data,val) => {
    }));
 
    console.log(updatedResources)
-   // if(!response.data.task){
-   //    await deleteResource(data._id)
-   // }
 }
 
   return (
@@ -109,58 +106,80 @@ const deleteTaskValue = async(data,val) => {
     return(
    
      <div className='border-b border-dashed m-5'>
-     <h3 className='font-bold text-3xl uppercase m-8 text-gray-400'>{data.goal}</h3>
-     <div className='mx-8 my-9'>
-     <p className='font-bold text-xl'>Tasks</p>
+      <Heading fontSize='2xl' textTransform='uppercase' textAlign='center' color='blue.400'>
+        {data.goal}
+      </Heading>
 
-     {data.task ? data.task.map((val,i)=> {
-      return(
-         <>
-         <p className='text-lg font-thin my-4' key={val.id}>
-         <input type="checkbox" onChange={()=>deleteTaskValue(data,val)} key={i}/> {val.name ? val.name : 'No tasks'}
-         </p> 
-         </>
-      )
-     }) : 'No tasks added'}
      
-     {hideAddButton && <>
-     <button onClick={()=>toggleTask(data._id)}><IoMdAdd /></button> <br/>
-     </>}
+      <Box>
+      <div className='mx-8 my-9'>
+      <Heading fontSize='xl' color='blue.400'>Tasks</Heading>
 
-   
-      {addTask &&  (target === data._id) ? (<>
-      <label htmlFor="task">task</label> &nbsp;
-      <input type="text" className='border mb-3' id='task' onChange={(e)=> setTask({...task,name:e.target.value})} value={task.name}></input> <br/>
-      <label htmlFor="deadline">deadline</label> &nbsp;
-      <input type="date" className='border' id='deadline'  onChange={(e)=> setTask({...task,deadline:e.target.value})} value={task.deadline}></input> <br/>
-      <button className='border mt-3 px-2 rounded' onClick={()=>updateTaskValue({data})}>add</button>
-      </>) : ''} 
+         <Box marginTop='4.5'>
+            {data.task ? data.task.map((val,i)=> {
+            return(
+               <>
+               <Text key={val.id} color='gray.400'>
+               <input type="checkbox" onChange={()=>deleteTaskValue(data,val)} key={i}/> {val.name ? val.name : 'No tasks'}
+               </Text> 
+               </>
+            )
+            }) : 'No tasks added'}
+         </Box>
+         
+         <Box marginTop='2.5'>
+         {hideAddButton && <>
+         <button onClick={()=>toggleTask(data._id)}><IoMdAdd /></button> <br/>
+         </>}
+         </Box>
+         
 
-   
-     </div>
-     
-     <div className='mx-8'>
-      <h2>Articles</h2>
-     <p className='font-bold text-xl'>Resources</p>
-     {articles.map((a)=>{
-      return(
-         <>
-         <p> {a}</p>
+         <Flex flexDir='column' gap='2.5'   marginTop='2.5'>
+         {addTask &&  (target === data._id) ? (<>
+         <Box>
+         <Text htmlFor="task">task</Text> &nbsp;
+         <Input type="text" id='task' onChange={(e)=> setTask({...task,name:e.target.value})} value={task.name}/> <br/>
+         </Box>
+         <Box>
+         <Text htmlFor="deadline">deadline</Text> &nbsp;
+         <Input type="date" id='deadline'  onChange={(e)=> setTask({...task,deadline:e.target.value})} value={task.deadline}/><br/>
+         </Box>
+         <Button onClick={()=>updateTaskValue({data})}>add</Button>
+         </>) : ''} 
+         </Flex>
         
-         </>
-      )
-     })}
-    <h2>Videos</h2>
-    {videos.map((a)=>{
-      return(
-         <>
-         <p> {a}</p>
-         <img src={a[1]} alt="" />
-         </>
-      )
-     })}
-     </div>
+         </div>
+      </Box>
+
+      <Flex flexDirection='column' gap='4.5'>
+      <Heading color='blue.400'>Recommended Resources</Heading>
+      <Box>
+      <Heading>Articles</Heading>
+      
+      {articles.map((a)=>{
+         return(
+            <>
+            <Text fontSize='large' margin='2'> {a}</Text>
+            
+            </>
+         )
+      })}
+      </Box>
+
+     <Box>
+     <Heading>Videos</Heading>
+         {videos.map((a)=>{
+            return(
+               <Box margin='2'>
+               <Text marginTop='2.5'> {a}</Text>
+               <Image src={a[1]} alt=""  marginTop='2.5'/>
+               </Box>
+            )
+         })}
+     </Box>
+        
      <Button onClick={()=>showArticle(data)}>show</Button>
+      </Flex>
     </div>)
    })}
    

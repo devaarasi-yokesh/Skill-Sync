@@ -9,14 +9,20 @@ import LoginButton from './elements/LoginButton'
 import SignupButton from './elements/SignupButton'
 import LogoutButton from './elements/LogoutButton'
 import {useAuth0} from '@auth0/auth0-react'
+import { Center, Flex, Heading, Box } from '@chakra-ui/react'
 function App() {
 
   const {loginWithRedirect,isAuthenticated,isLoading,user,error} = useAuth0();
 
   return (
     <>
-    <div className='max-w-3xl'>
-      <h1 className='text-xl sm:text-2xl md:text-3xl lg:text-4xl text-center font-semibold tracking-tight text-gray-800'>Skill Sync</h1>
+    <Center>
+    <Flex flexDirection='column' gap='14'>
+      <Box flexBasis='25%'>
+        <Center>
+        <Heading size='5xl' fontWeight='bold'>Skill Sync</Heading>
+        </Center>
+      
       {!isAuthenticated  && (
         <>
         <LoginButton/>
@@ -26,13 +32,19 @@ function App() {
       {isAuthenticated && (
         <LogoutButton/>
       )}
+      </Box>
+      <Box>
       <Routes>
         <Route path='/' element={<HomePage/>}> </Route>
         <Route path='/create' element={<CreatePage/>}></Route>
         <Route path='/goals' element={<Goals />}></Route>
       </Routes>
+      </Box>
+      <Box>
       <NavBar></NavBar>
-    </div>
+      </Box>
+    </Flex>
+    </Center>
     </>
   )
 }

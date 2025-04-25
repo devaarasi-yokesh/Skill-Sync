@@ -12,7 +12,7 @@ import {
 } from 'chart.js';
 import {Bar} from 'react-chartjs-2'
 import { useState } from 'react';
-import { Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react';
 import { isBefore, isToday, isTomorrow, compareAsc, parseISO } from 'date-fns';
 import { resourceStore } from '../store/resource.store';
 
@@ -104,23 +104,37 @@ return upcomingTasks;
 
 }
 
+
+
   return (
     <div>
-      <button className='w-full cursor-pointer text-gray-900'><Link to='/create'>+ add goal</Link></button>
-      <div  style={{ width: '400px', height: '300px' }}>
-      <Bar data={chartData} options={options}></Bar>
-      </div>
-      <div>
-        <button onClick={updateUpcomingTasks}>try</button>
-        <Text>Upcoming Tasks</Text>
-        {upcomingTasks.map((task)=>{
-          return(
-            <>
-            <p>{task.name}</p>
-            </>
-          )
-        })}
-      </div>
+      <Flex flexDir='column' gap='24'>
+      <Button w='full'><Link to='/create'>+ add goal</Link></Button>
+
+        <Box>
+        <div  style={{ width: '400px', height: '300px' }}>
+        <Bar data={chartData} options={options}></Bar>
+        </div>
+        </Box>
+        <Box>
+        <div>
+        <Flex gap='40' flexDir='row'>
+        <Heading><Text>Upcoming Tasks</Text></Heading>
+          <Button onClick={updateUpcomingTasks}>update</Button>
+        </Flex>
+        
+          {upcomingTasks.map((task)=>{
+            return(
+              <>
+              <p>{task.name}</p>
+              </>
+            )
+          })}
+        </div>
+        </Box>
+
+      </Flex>
+
       
     </div>
   )
