@@ -171,7 +171,7 @@ const deleteTaskValue = async(data,val) => {
          {videos.map((a)=>{
             return(
                <Box margin='2'>
-               <Text marginTop='2.5'> {a}</Text>
+               <Text marginTop='2.5'> {a[0]}</Text>
                <Image src={a[1]} alt=""  marginTop='2.5'/>
                </Box>
             )

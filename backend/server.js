@@ -20,7 +20,7 @@ app.use(cors())
 
 app.use('/api/res',resourceRoutes);
 
-console.log(audience)
+console.log(audience,baseurl)
 const jwtCheck = auth({
   audience: audience,
   issuerBaseURL: baseurl,
