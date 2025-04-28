@@ -18,20 +18,26 @@ function App() {
     <>
     <Center>
     <Flex flexDirection='column' gap='14'>
-      <Box flexBasis='25%'>
+      <Box>
+        <Flex>
         <Center>
         <Heading size='5xl' fontWeight='bold'>Skill Sync</Heading>
         </Center>
       
       {!isAuthenticated  && (
         <>
-        <LoginButton/>
-        <SignupButton/>
+        <Flex flexDir='row' gap='6' marginTop='8' marginLeft='24'>
+          <LoginButton/>
+          <SignupButton/>
+        </Flex>
+        
         </>
       )}
       {isAuthenticated && (
         <LogoutButton/>
       )}
+        </Flex>
+       
       </Box>
       <Box>
       <Routes>

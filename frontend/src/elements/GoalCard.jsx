@@ -2,8 +2,8 @@ import React,{useState,useEffect} from 'react'
 import { resourceStore } from '../store/resource.store';
 import { IoMdAdd } from "react-icons/io";
 import { nanoid } from 'nanoid';
-import { Button, Heading, Box, Text,Input, Flex, Image } from '@chakra-ui/react';
-import { data } from 'react-router-dom';
+import { Button, Heading, Box, Text,Input, Flex, Image, Popover, Portal } from '@chakra-ui/react';
+import Popup from 'reactjs-popup';
 
 
 
@@ -27,14 +27,18 @@ useEffect(() => {
 
 const showArticle = async(data) =>{
    console.log(data)
-   const article = await getArticle(data.goal);
-   const articleValues = article.data.map((v)=>v.title);
+   const val = data.toLowerCase();
+   const article = await getArticle(val);
+   
+   const articleValues = article ? article.data.map(async(v)=>await v.title):'no article retrieved';
    setArticles(articleValues);
-   console.log(articles)
+   
+
    console.log(article.data.map((v)=>v.title))
    const video = await getVideo(data.goal);
    const videoValues = video.data.items.map((item)=>[item.snippet.title,item.snippet.thumbnails.default.url]);
    setVideos(videoValues);
+
    console.log(video.data.items.map((item)=>[item.snippet.title,item.snippet.thumbnails.default.url]))
    const course = await getCourse(data.goal);
    console.log(course)
@@ -42,12 +46,15 @@ const showArticle = async(data) =>{
 
 
 const updateTaskValue = async({data})=>{
-   console.log(nanoid())
+
+   if(!task.name && !task.deadline){
+      alert('Please fill the required fields')
+   }
+
+   else{
    let temp = {...task,id:nanoid()};
    setTask(temp)
    data.task = [...data.task,temp]
-   console.log(data.task,task,temp)
-  
   
    setAddTask(false);
    setHideAddButton(true);
@@ -58,6 +65,8 @@ const updateTaskValue = async({data})=>{
       deadline:"",
       id:"",
    });
+   }
+   
    
 }
 
@@ -112,7 +121,6 @@ const deleteTaskValue = async(data,val) => {
 
      
       <Box>
-      <div className='mx-8 my-9'>
       <Heading fontSize='xl' color='blue.400'>Tasks</Heading>
 
          <Box marginTop='4.5'>
@@ -127,28 +135,37 @@ const deleteTaskValue = async(data,val) => {
             }) : 'No tasks added'}
          </Box>
          
-         <Box marginTop='2.5'>
-         {hideAddButton && <>
-         <button onClick={()=>toggleTask(data._id)}><IoMdAdd /></button> <br/>
-         </>}
-         </Box>
-         
+         <Popover.Root positioning={{ placement:'right-end'}}>
+            
+             <Popover.Trigger onClick={()=>toggleTask(data._id)} asChild><IoMdAdd />
+            </Popover.Trigger>
+           
+            <Portal>
+               <Popover.Positioner>
+                  <Popover.Content css={{'--popover-bg':'colors.blue.300'}}>
+                     <Popover.Arrow/>
+                     <Popover.Body>
+                        <Popover.Title css={{'--popover-bg':'colors.black.300'}}>create task</Popover.Title>
+                        <Flex flexDir='column' gap='2.5'   marginTop='2.5'>
+                           {addTask &&  (target === data._id) ? (<>
 
-         <Flex flexDir='column' gap='2.5'   marginTop='2.5'>
-         {addTask &&  (target === data._id) ? (<>
-         <Box>
-         <Text htmlFor="task">task</Text> &nbsp;
-         <Input type="text" id='task' onChange={(e)=> setTask({...task,name:e.target.value})} value={task.name}/> <br/>
-         </Box>
-         <Box>
-         <Text htmlFor="deadline">deadline</Text> &nbsp;
-         <Input type="date" id='deadline'  onChange={(e)=> setTask({...task,deadline:e.target.value})} value={task.deadline}/><br/>
-         </Box>
-         <Button onClick={()=>updateTaskValue({data})}>add</Button>
-         </>) : ''} 
-         </Flex>
-        
-         </div>
+                           <Box>
+                           <Text htmlFor="task">task</Text> &nbsp;
+                           <Input type="text" id='task' onChange={(e)=> setTask({...task,name:e.target.value})} value={task.name}/> <br/>
+                           </Box>
+
+                           <Box>
+                           <Text htmlFor="deadline">deadline</Text> &nbsp;
+                           <Input type="date" id='deadline'  onChange={(e)=> setTask({...task,deadline:e.target.value})} value={task.deadline}/><br/>
+                           </Box>
+                           <Button onClick={()=>{updateTaskValue({data})}}>add</Button>
+                           </>) : ''} 
+                           </Flex>
+                     </Popover.Body>
+                  </Popover.Content>
+               </Popover.Positioner>
+            </Portal>
+         </Popover.Root>
       </Box>
 
       <Flex flexDirection='column' gap='4.5'>
@@ -178,7 +195,7 @@ const deleteTaskValue = async(data,val) => {
          })}
      </Box>
         
-     <Button onClick={()=>showArticle(data)}>show</Button>
+     <Button onClick={()=>showArticle(data.goal)}>show</Button>
       </Flex>
     </div>)
    })}

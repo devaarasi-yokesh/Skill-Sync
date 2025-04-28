@@ -31,9 +31,10 @@ const HomePage = () => {
 
 const { resources,getResource} = resourceStore();
 const [upcomingTasks, setUpcomingTasks] = useState([]);
-
+const [helperObj, setHelperObj] = useState([])
 useEffect(() => {
-   getResource()
+   getResource();
+  updateUpcomingTasks();
 },[getResource]);
 
 
@@ -78,25 +79,31 @@ const [chartData, setChartData] = useState({
       stack:'Stack 0'
     }
   ]
-})
-let tasks = resources.map((item)=> item.task);
-
-const updateUpcomingTasks = ()=>{
-  const dateObj = new Date();
-  //  const currentDate = `${dateObj.getFullYear()}-${dateObj.getMonth()}-${dateObj.getDate()}`;
-  //  console.log(currentDate,dateObj,tasks,resources)
-
-  const tasksArray = tasks[0];
-  tasksArray.forEach(task => {
-    console.log(task.deadline)
-  });
-
-  const currentDate = new Date();
-const upcomingTasks = tasksArray.filter(task => {
-  const taskDeadline = new Date(task.deadline);
-  return taskDeadline >= currentDate;
 });
-upcomingTasks.sort((a, b) => new Date(a.deadline) - new Date(b.deadline));
+
+
+const updateUpcomingTasks = async()=>{
+  
+  let t = await getResource();
+  const temp = t.data;
+  let tasks = temp.map((item)=> item.task);
+
+  let tasksArray = tasks.map((task)=>(task.map((item)=> {
+      let p = {name:'',deadline:''}
+      p.name = item.name;
+      p.deadline = item.deadline;
+      return p
+  })));
+    
+  
+const upcomingTasks = tasksArray? tasksArray.filter(task => {
+  const currentDate = new Date();
+  const taskDeadline = new Date(task[0].deadline);
+  return taskDeadline >= currentDate;
+}): 'no tasks scheduled';
+
+upcomingTasks ? upcomingTasks.sort((a, b) => new Date(a.deadline) - new Date(b.deadline)) : 'no tasks scheduled';
+
 
 
 setUpcomingTasks(upcomingTasks)
@@ -115,18 +122,23 @@ return upcomingTasks;
         <div  style={{ width: '400px', height: '300px' }}>
         <Bar data={chartData} options={options}></Bar>
         </div>
+        <Heading color='blue.400' textAlign='center'>Goals Processing</Heading>
         </Box>
+
         <Box>
         <div>
+
         <Flex gap='40' flexDir='row'>
         <Heading><Text>Upcoming Tasks</Text></Heading>
-          <Button onClick={updateUpcomingTasks}>update</Button>
         </Flex>
         
           {upcomingTasks.map((task)=>{
             return(
               <>
-              <p>{task.name}</p>
+              {task.map((item)=>{
+                return  <p>{item.name} &nbsp; {item.deadline}</p>
+              })}
+              
               </>
             )
           })}

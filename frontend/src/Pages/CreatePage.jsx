@@ -53,7 +53,7 @@ const handleAdd = async() => {
 
   return (
     <div className='mt-9'>
-      <Heading fontSize='3xl' marginBottom='8'>Create Goal</Heading>
+      <Heading fontSize='3xl' marginBottom='8' color='blue.400'>Create Goal</Heading>
     <form>
       <Flex flexDirection='column' gap='8'>
       <div>

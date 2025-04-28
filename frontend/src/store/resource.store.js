@@ -85,15 +85,17 @@ export const resourceStore = create((set)=>({
         return {success:true, message:data.message,data:data.val}
     },
     getArticle: async(article)=>{
-        const res = await fetch(`api/res/article/${article}`,{
-            method:'GET',
-            headers:{
-                "Content-Type": "application/json"
-            },
-        })
-
-        const data = await res.json();
-        return{success:true, message: "Product created successfully",data:data.data};
+        console.log(article)
+        try{
+            console.log(article)
+            const data = await fetch(`https://dev.to/api/articles?tag=${article}&per_page=2`);
+        const res = await data.json();
+        console.log(res)
+        return{success:true, message: "Article fetched",data:res};
+        }
+        catch(error){
+            console.error('Error fetching articles:', error);
+        }
     },
     getVideo: async(tag)=>{
         const res = await fetch(`api/res/video/${tag}`,{
