@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react'
+import React,{useState,useEffect, useCallback} from 'react'
 import { resourceStore } from '../store/resource.store';
 import { IoMdAdd } from "react-icons/io";
 import { nanoid } from 'nanoid';
@@ -18,31 +18,46 @@ const GoalCard = () => {
     const [target, setTarget] = useState(null);
     const [articles, setArticles] = useState([]);
     const [videos, setVideos] = useState([]);
+    const [goalName, setGoalName] = useState('');
  
+
+
+    const showArticle = useCallback(async() =>{
+      
+      const rs = await getResource();
+      const goals = rs.data;
+      console.log(goals)
+      const goalNames = goals.map(async(d)=>{
+        
+
+         const val =  d.goal.toLowerCase();
+         const article = await getArticle(val);
+      
+      const articleValues = article ? await Promise.all(article.data.map((v)=> v.title)):'no article retrieved';
+      setArticles([...articles,articleValues]);
+      });
+      
+      goals.map(async(d)=>{
+         const val =  d.goal.toLowerCase();
+         console.log(val)
+         const video = await getVideo(val);
+         const videoValues = video.data.items.map((item)=>[item.snippet.title,item.snippet.thumbnails.default.url]);
+         setVideos([...videos,videoValues]);
+         
+      console.log(video.data.items.map((item)=>[item.snippet.title,item.snippet.thumbnails.default.url]))
+      })
+      
+   
+      const course = await getCourse(val);
+      console.log(course)
+   },[goalName])
 
 useEffect(() => {
    getResource(); 
-  
-},[resources,getResource]);
+   showArticle();
+},[getResource]);
 
-const showArticle = async(data) =>{
-   console.log(data)
-   const val = data.toLowerCase();
-   const article = await getArticle(val);
-   
-   const articleValues = article ? article.data.map(async(v)=>await v.title):'no article retrieved';
-   setArticles(articleValues);
-   
 
-   console.log(article.data.map((v)=>v.title))
-   const video = await getVideo(data.goal);
-   const videoValues = video.data.items.map((item)=>[item.snippet.title,item.snippet.thumbnails.default.url]);
-   setVideos(videoValues);
-
-   console.log(video.data.items.map((item)=>[item.snippet.title,item.snippet.thumbnails.default.url]))
-   const course = await getCourse(data.goal);
-   console.log(course)
-}
 
 
 const updateTaskValue = async({data})=>{
@@ -111,7 +126,7 @@ const deleteTaskValue = async(data,val) => {
   return (
     <>
      {resources.map((data,index)=>{
-     
+   
     return(
    
      <div className='border-b border-dashed m-5'>
@@ -175,8 +190,15 @@ const deleteTaskValue = async(data,val) => {
       
       {articles.map((a)=>{
          return(
+           
             <>
-            <Text fontSize='large' margin='2'> {a}</Text>
+             {a.map((val,i) => {
+               return(
+                  <>
+            <Text fontSize='large' margin='2'> {val}</Text>
+                  </>
+               )
+             })}
             
             </>
          )
@@ -187,15 +209,25 @@ const deleteTaskValue = async(data,val) => {
      <Heading>Videos</Heading>
          {videos.map((a)=>{
             return(
+               <>
+                  {a.map((val,i) => {
+                  return(
+                     <>
+               
                <Box margin='2'>
-               <Text marginTop='2.5'> {a[0]}</Text>
-               <Image src={a[1]} alt=""  marginTop='2.5'/>
+               <Text marginTop='2.5'> {val[0]}</Text>
+               <Image src={val[1]} alt=""  marginTop='2.5'/>
                </Box>
+                     </>
+                  )
+                })}
+               </>
+               
+               
+              
             )
          })}
      </Box>
-        
-     <Button onClick={()=>showArticle(data.goal)}>show</Button>
       </Flex>
     </div>)
    })}

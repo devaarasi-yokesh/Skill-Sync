@@ -9,10 +9,11 @@ import {
   Tooltip,
   Legend,
   scales,
+  ArcElement,
 } from 'chart.js';
-import {Bar} from 'react-chartjs-2'
+import {Bar, Doughnut} from 'react-chartjs-2'
 import { useState } from 'react';
-import { Box, Button, Flex, Heading, Text } from '@chakra-ui/react';
+import { Box, Button, Center, Flex, Heading, Text } from '@chakra-ui/react';
 import { isBefore, isToday, isTomorrow, compareAsc, parseISO } from 'date-fns';
 import { resourceStore } from '../store/resource.store';
 
@@ -20,6 +21,7 @@ ChartJS.register(
   CategoryScale,
   LinearScale,
   BarElement,
+  ArcElement,
   Title,
   Tooltip,
   Legend
@@ -31,13 +33,34 @@ const HomePage = () => {
 
 const { resources,getResource} = resourceStore();
 const [upcomingTasks, setUpcomingTasks] = useState([]);
-const [helperObj, setHelperObj] = useState([])
+const [bChart, setBChart] = useState(false);
+const [dChart, setDChart] = useState(false);
+
 useEffect(() => {
    getResource();
   updateUpcomingTasks();
 },[getResource]);
 
+//Doughnut chart
+const label = resources.map((data) => data.goal);
 
+const [doughnutChartData, setdoughnutChartData] = useState({
+  labels:['remaining','completed'],
+  datasets: [
+    {
+      label: 'Python',
+      data: [resources.map((data)=> data.task.length),resources.map((data)=> data.completedTasks.length)],
+      backgroundColor:[ 'rgb(255, 99, 132)',
+        'rgb(54, 162, 235)',
+        'rgb(255, 205, 86)']
+    },
+    
+     
+  ]
+});
+
+
+//Bar Chart
 const options = {
   responsive: true,
   maintainAspectRatio: false,
@@ -60,7 +83,7 @@ const options = {
 
 const labels = resources.map((data) => data.goal);
 const [chartData, setChartData] = useState({
-  labels,
+  labels:labels,
   datasets: [
     {
       label: "Remaining",
@@ -86,6 +109,16 @@ const updateUpcomingTasks = async()=>{
   
   let t = await getResource();
   const temp = t.data;
+  console.log(bChart,dChart)
+  if(temp.length > 1){
+    setBChart(true);
+    setDChart(false);
+  }   
+  else{
+    setDChart(true); 
+    setBChart(false)
+  }  // Updating current no of goals 
+  console.log(temp.length)
   let tasks = temp.map((item)=> item.task);
 
   let tasksArray = tasks.map((task)=>(task.map((item)=> {
@@ -119,9 +152,15 @@ return upcomingTasks;
       <Button w='full'><Link to='/create'>+ add goal</Link></Button>
 
         <Box>
+        <Center>
         <div  style={{ width: '400px', height: '300px' }}>
-        <Bar data={chartData} options={options}></Bar>
+          {!bChart && !dChart }
+          {bChart && <Bar data={chartData} options={options}></Bar> }
+          {dChart && <Doughnut data={doughnutChartData}></Doughnut>}
+          
         </div>
+        </Center>
+        
         <Heading color='blue.400' textAlign='center'>Goals Processing</Heading>
         </Box>
 

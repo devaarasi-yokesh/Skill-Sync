@@ -98,6 +98,7 @@ export const resourceStore = create((set)=>({
         }
     },
     getVideo: async(tag)=>{
+        console.log(tag)
         const res = await fetch(`api/res/video/${tag}`,{
             method:'GET',
             headers:{

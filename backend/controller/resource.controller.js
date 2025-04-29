@@ -84,12 +84,7 @@ export const deleteResource = async(req,res) =>{
     }
 }
 
-// export const getArticles = async (req,res)=>{
-//     const {article} = req.params;
-//     const articles = await fetch(`https://dev.to/api/articles?tag=${article}&per_page=5`).then((data)=> data.json());
-   
-//     res.status(200).json({success:true, message:'Articles found',data:articles});
-// }
+
 
 export const getVideos = async (req,res)=>{
     const {tag} = req.params;
