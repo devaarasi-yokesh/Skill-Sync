@@ -1,16 +1,17 @@
 import React,{useState,useEffect, useCallback} from 'react'
-import { resourceStore } from '../store/resource.store';
+import { goalStore } from '../store/goal.store';
 import { IoMdAdd } from "react-icons/io";
 import { nanoid } from 'nanoid';
 import { Button, Heading, Box, Text,Input, Flex, Image, Popover, Portal } from '@chakra-ui/react';
-import Popup from 'reactjs-popup';
+import ResourceSection from './ResourceSection';
+
 
 
 
 
 const GoalCard = () => {
 
-    const {resources,getResource,updateResource,deleteResource,getArticle,getVideo,createGoal,getCourse} = resourceStore();
+    const {goals,getGoal,updateGoal,deleteGoal,getArticle,getVideo,createCompletedGoal,getCourse} = goalStore();
     const [task, setTask] = useState({name:"",deadline:"",id:""});
     const [addTask, setAddTask] = useState(false);
     const [hideAddButton, setHideAddButton] = useState(true);
@@ -18,13 +19,14 @@ const GoalCard = () => {
     const [target, setTarget] = useState(null);
     const [articles, setArticles] = useState([]);
     const [videos, setVideos] = useState([]);
+    const [courses, setCourses] = useState([]);
     const [goalName, setGoalName] = useState('');
  
 
 
     const showArticle = useCallback(async() =>{
       
-      const rs = await getResource();
+      const rs = await getGoal();
       const goals = rs.data;
       console.log(goals)
       const goalNames = goals.map(async(d)=>{
@@ -47,15 +49,19 @@ const GoalCard = () => {
       console.log(video.data.items.map((item)=>[item.snippet.title,item.snippet.thumbnails.default.url]))
       })
       
+      const res = await fetch('http://localhost:3000/api/orgs');
+      const data = await res.json();
+      const courseValues = data.elements.map((val)=>val.name);
+      setCourses([...courses,courseValues])
+      console.log(data.elements.map((val)=>val.name),courseValues)
    
-      const course = await getCourse(val);
-      console.log(course)
    },[goalName])
 
 useEffect(() => {
-   getResource(); 
+   getGoal(); 
    showArticle();
-},[getResource]);
+   checkAPI();
+},[getGoal]);
 
 
 
@@ -74,7 +80,8 @@ const updateTaskValue = async({data})=>{
    setAddTask(false);
    setHideAddButton(true);
 
-   await updateResource(data._id,data)
+   const res = await updateGoal(data._id,data)
+
    setTask({
       name:"",
       deadline:"",
@@ -94,7 +101,6 @@ const toggleTask = (id) => {
    setTarget(id
 )
   ;
-  console.log(id,target)
 }
 
 
@@ -103,14 +109,14 @@ const deleteTaskValue = async(data,val) => {
    data.completedTasks = [...data.completedTasks,val]
    
    console.log(data,"Testing here")
-   const response = await updateResource(data._id,data);
-   console.log(response.message,resources)
+   const response = await updateGoal(data._id,data);
+   console.log(response.message,goals)
 
-   const updatedResources = await Promise.all(resources.map(async(item)=> {
+   const updatedgoals = await Promise.all(goals.map(async(item)=> {
       if(item._id === data._id){
          if(item.task.length === 0){
-           const newG =  await createGoal({goal:data.goal,id:data._id})
-           const newVal = await deleteResource(data._id)
+           const newG =  await createCompletedGoal({goal:data.goal,id:data._id})
+           const newVal = await deleteGoal(data._id)
            console.log(newG)
            console.log(newVal.message)
          }
@@ -120,12 +126,16 @@ const deleteTaskValue = async(data,val) => {
       }
    }));
 
-   console.log(updatedResources)
+   console.log(updatedgoals)
+}
+
+async function checkAPI(){
+ 
 }
 
   return (
     <>
-     {resources.map((data,index)=>{
+     {goals.map((data,index)=>{
    
     return(
    
@@ -183,8 +193,10 @@ const deleteTaskValue = async(data,val) => {
          </Popover.Root>
       </Box>
 
+      <ResourceSection/>
+
       <Flex flexDirection='column' gap='4.5'>
-      <Heading color='blue.400'>Recommended Resources</Heading>
+      <Heading color='blue.400'>Recommended goals</Heading>
       <Box>
       <Heading>Articles</Heading>
       
@@ -221,6 +233,25 @@ const deleteTaskValue = async(data,val) => {
                      </>
                   )
                 })}
+               </>
+               
+               
+              
+            )
+         })}
+     </Box>
+
+     <Box>
+     <Heading>Courses</Heading>
+         {courses.map((a,i)=>{
+            return(
+               <>
+                 {a.map((b)=>{
+                  return(
+                     <Text>{b}</Text>
+                  )
+                 })}
+                  
                </>
                
                

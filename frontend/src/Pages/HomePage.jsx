@@ -15,7 +15,7 @@ import {Bar, Doughnut} from 'react-chartjs-2'
 import { useState } from 'react';
 import { Box, Button, Center, Flex, Heading, Text } from '@chakra-ui/react';
 import { isBefore, isToday, isTomorrow, compareAsc, parseISO } from 'date-fns';
-import { resourceStore } from '../store/resource.store';
+import { goalStore } from '../store/goal.store';
 
 ChartJS.register(
   CategoryScale,
@@ -31,25 +31,33 @@ ChartJS.register(
 
 const HomePage = () => {
 
-const { resources,getResource} = resourceStore();
+const { goals,getGoal,getResource,resources} = goalStore();
 const [upcomingTasks, setUpcomingTasks] = useState([]);
 const [bChart, setBChart] = useState(false);
 const [dChart, setDChart] = useState(false);
 
 useEffect(() => {
+   getGoal();
    getResource();
   updateUpcomingTasks();
-},[getResource]);
+},[getGoal]);
 
 //Doughnut chart
-const label = resources.map((data) => data.goal);
+const label = goals.map((data) => data.goal);
+
+console.log('resources',resources.map((rsc)=>rsc.resource))
+const remaining_events = Number(goals.map((data)=> data.task.length)) + Number(resources.map((rsc)=>rsc.resource.length));
+const completed_events = Number(goals.map((data)=> data.completedTasks.length)) + Number(resources.map((data)=> data.completedResources.length))
+
+
+
 
 const [doughnutChartData, setdoughnutChartData] = useState({
   labels:['remaining','completed'],
   datasets: [
     {
       label: 'Python',
-      data: [resources.map((data)=> data.task.length),resources.map((data)=> data.completedTasks.length)],
+      data: [remaining_events,completed_events],
       backgroundColor:[ 'rgb(255, 99, 132)',
         'rgb(54, 162, 235)',
         'rgb(255, 205, 86)']
@@ -81,13 +89,13 @@ const options = {
 
 
 
-const labels = resources.map((data) => data.goal);
+const labels = goals.map((data) => data.goal);
 const [chartData, setChartData] = useState({
   labels:labels,
   datasets: [
     {
       label: "Remaining",
-      data: resources.map((data)=> data.task.length),
+      data: goals.map((data)=> data.task.length),
       backgroundColor:"#f817171",
       borderColor: "gray",
       borderWidth: 2,
@@ -95,7 +103,7 @@ const [chartData, setChartData] = useState({
     },
     {
       label: "Completed",
-      data: resources.map((data)=> data.completedTasks.length),
+      data: goals.map((data)=> data.completedTasks.length),
       backgroundColor:'#4ade80',
       borderColor: "gray",
       borderWidth: 2,
@@ -107,7 +115,7 @@ const [chartData, setChartData] = useState({
 
 const updateUpcomingTasks = async()=>{
   
-  let t = await getResource();
+  let t = await getGoal();
   const temp = t.data;
   console.log(bChart,dChart)
   if(temp.length > 1){
@@ -185,7 +193,7 @@ return upcomingTasks;
         </Box>
 
       </Flex>
-
+<button onClick={checkAPI}>ok</button>
       
     </div>
   )

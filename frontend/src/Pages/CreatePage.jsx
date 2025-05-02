@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import {resourceStore} from '../store/resource.store'
+import {goalStore} from '../store/goal.store'
 import { nanoid } from 'nanoid'
 import { Button, Flex, Heading, Input, Text } from '@chakra-ui/react';
 
@@ -18,7 +18,7 @@ const [newRes, setNewRes] = useState({
 
 
 
-const {createResource, resources} = resourceStore();
+const {createGoal, goals} = goalStore();
 
 
 const handleInput = (e) =>{
@@ -37,7 +37,7 @@ const handleInput = (e) =>{
 
 const handleAdd = async() => {
   console.log(newRes)
- const data = await createResource(newRes);
+ const data = await createGoal(newRes);
  console.log(data.message)
  
  setNewRes({

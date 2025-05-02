@@ -2,7 +2,15 @@ import mongoose from "mongoose";
 
 const goalSchema = new mongoose.Schema({
     goal:{
-        type: Object,
+        type: String,
+        required: true
+    },
+    task:{
+        type: Array,
+        required: true
+    },
+    completedTasks:{
+        type: Array,
         required: true
     }
 },

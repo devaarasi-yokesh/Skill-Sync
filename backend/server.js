@@ -4,7 +4,7 @@ import express from 'express'
 import { connectDB } from "./config/db.js";
 import cors from 'cors'
 import dotenv from 'dotenv'
-import resourceRoutes from './routes/resource.route.js'
+import resourceRoutes from './routes/goal.route.js'
 import path from 'path'
 
 const app = express();
@@ -31,6 +31,12 @@ app.use('/protected',jwtCheck);
 
 app.get('/protected', function (req, res) {
   res.send('Secured Resource');
+});
+
+app.get('/api/orgs', async (req, res) => {
+  const response = await fetch('https://api.coursera.org/api/courses.v1?q=search&query=react&limit=7');
+  const data = await response.json();
+  res.json(data);
 });
 
 if(process.env.NODE_ENV === 'production'){
