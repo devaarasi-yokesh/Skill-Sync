@@ -21,6 +21,8 @@ const GoalCard = () => {
     const [videos, setVideos] = useState([]);
     const [courses, setCourses] = useState([]);
     const [goalName, setGoalName] = useState('');
+    const [checkCompleted,setCompleted] = useState(false);
+    const [selctedItem,setSelectedItem] = useState('');
  
 
 
@@ -60,7 +62,6 @@ const GoalCard = () => {
 useEffect(() => {
    getGoal(); 
    showArticle();
-   checkAPI();
 },[getGoal]);
 
 
@@ -129,9 +130,7 @@ const deleteTaskValue = async(data,val) => {
    console.log(updatedgoals)
 }
 
-async function checkAPI(){
- 
-}
+
 
   return (
     <>
@@ -195,8 +194,8 @@ async function checkAPI(){
 
       <ResourceSection/>
 
-      <Flex flexDirection='column' gap='4.5'>
-      <Heading color='blue.400'>Recommended goals</Heading>
+      <Flex flexDirection='column' gap='4.5' marginTop={'8'}>
+      <Heading color='blue.400'>Recommended resources</Heading>
       <Box>
       <Heading>Articles</Heading>
       
@@ -206,9 +205,11 @@ async function checkAPI(){
             <>
              {a.map((val,i) => {
                return(
-                  <>
-            <Text fontSize='large' margin='2'> {val}</Text>
-                  </>
+                  <Flex gap={'8'} flexDir={'row'}>
+               
+                  <Text fontSize='large' marginY='4.5' color={checkCompleted && selctedItem === i ? 'green.400' : 'gray.800'} key={i}> {val}</Text>
+                  <Text  margin={4.5} rounded={'md'} borderWidth={'1px'} padding={'2px'} onClick={()=>{setCompleted(true);setSelectedItem(i)}} cursor={'pointer'}>Complete</Text>
+                  </Flex>
                )
              })}
             

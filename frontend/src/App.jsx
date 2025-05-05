@@ -5,6 +5,7 @@ import HomePage from './Pages/HomePage'
 import CreatePage from './Pages/CreatePage'
 import NavBar from './elements/NavBar'
 import Goals from './Pages/Goals'
+import Profile from './pages/Profile'
 import LoginButton from './elements/LoginButton'
 import SignupButton from './elements/SignupButton'
 import LogoutButton from './elements/LogoutButton'
@@ -44,6 +45,7 @@ function App() {
         <Route path='/' element={<HomePage/>}> </Route>
         <Route path='/create' element={<CreatePage/>}></Route>
         <Route path='/goals' element={<Goals />}></Route>
+        <Route path='/profile' element={<Profile />}></Route>
       </Routes>
       </Box>
       <Box>

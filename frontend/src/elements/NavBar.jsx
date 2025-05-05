@@ -9,6 +9,7 @@ const NavBar = () => {
       <Link to='/'>Dashboard</Link>
       <Link to='/create'>Create</Link>
       <Link to='/goals'>Goals</Link>
+      <Link to='/profile'>Profile</Link>
       </Flex>
      
     </div>
