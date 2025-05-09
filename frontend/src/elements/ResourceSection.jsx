@@ -73,11 +73,13 @@ const handleResourceValue = async() =>{
              </Popover.Root>
              </Flex>
 
-             {resources.map((resource)=>{
-                console.log(resource.resource)
+             {resources.map((resource,i)=>{
+                console.log(resource.resource.map((d)=>d.name),'resource')
                 return(
                     <>
-                   {resource.resource.name}
+                   {resource.resource.map((x) => {
+                     return <li> {x.name} </li>
+                   })}
                     </>
                 )
              })}

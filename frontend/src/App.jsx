@@ -5,7 +5,7 @@ import HomePage from './Pages/HomePage'
 import CreatePage from './Pages/CreatePage'
 import NavBar from './elements/NavBar'
 import Goals from './Pages/Goals'
-import Profile from './pages/Profile'
+import Profile from './Pages/Profile'
 import LoginButton from './elements/LoginButton'
 import SignupButton from './elements/SignupButton'
 import LogoutButton from './elements/LogoutButton'
@@ -24,7 +24,7 @@ function App() {
         <Center>
         <Heading size='5xl' fontWeight='bold'>Skill Sync</Heading>
         </Center>
-      
+{/*       
       {!isAuthenticated  && (
         <>
         <Flex flexDir='row' gap='6' marginTop='8' marginLeft='24'>
@@ -36,7 +36,7 @@ function App() {
       )}
       {isAuthenticated && (
         <LogoutButton/>
-      )}
+      )} */}
         </Flex>
        
       </Box>

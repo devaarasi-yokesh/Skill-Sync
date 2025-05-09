@@ -205,11 +205,16 @@ const deleteTaskValue = async(data,val) => {
             <>
              {a.map((val,i) => {
                return(
-                  <Flex gap={'8'} flexDir={'row'}>
+                  <>
+                  {i < 2 ? <Flex gap={'8'} flexDir={'row'} color={'gray.800'}>
                
-                  <Text fontSize='large' marginY='4.5' color={checkCompleted && selctedItem === i ? 'green.400' : 'gray.800'} key={i}> {val}</Text>
-                  <Text  margin={4.5} rounded={'md'} borderWidth={'1px'} padding={'2px'} onClick={()=>{setCompleted(true);setSelectedItem(i)}} cursor={'pointer'}>Complete</Text>
-                  </Flex>
+               <Text fontSize='large' marginY='4.5' color={checkCompleted && selctedItem === i ? 'green.400' : 'gray.800'} key={i}> {val}</Text>
+               <Button>Add</Button>
+               <Button>Remove</Button>
+               <Text  margin={4.5} rounded={'md'} borderWidth={'1px'} padding={'2px'} onClick={()=>{setCompleted(true);setSelectedItem(i)}} cursor={'pointer'}>Complete</Text>
+               </Flex> : '' }
+                  
+                  </>
                )
              })}
             
@@ -230,6 +235,10 @@ const deleteTaskValue = async(data,val) => {
                <Box margin='2'>
                <Text marginTop='2.5'> {val[0]}</Text>
                <Image src={val[1]} alt=""  marginTop='2.5'/>
+               <Flex gap={'8'} marginTop={4} flexDir={'row'} color={'gray.800'}>
+               <Button>Add</Button>
+               <Button>Remove</Button>
+               </Flex>
                </Box>
                      </>
                   )
@@ -249,7 +258,13 @@ const deleteTaskValue = async(data,val) => {
                <>
                  {a.map((b)=>{
                   return(
+                     <>
                      <Text>{b}</Text>
+                     <Flex gap={'8'} marginTop={4} flexDir={'row'} color={'gray.800'}>
+                     <Button>Add</Button>
+                     <Button>Remove</Button>
+                     </Flex>
+                     </>
                   )
                  })}
                   

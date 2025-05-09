@@ -45,7 +45,7 @@ useEffect(() => {
 //Doughnut chart
 const label = goals.map((data) => data.goal);
 
-console.log('resources',resources.map((rsc)=>rsc.resource))
+console.log('resources',resources.map((rsc)=>rsc.resource),label)
 const remaining_events = Number(goals.map((data)=> data.task.length)) + Number(resources.map((rsc)=>rsc.resource.length));
 const completed_events = Number(goals.map((data)=> data.completedTasks.length)) + Number(resources.map((data)=> data.completedResources.length))
 
@@ -117,7 +117,9 @@ const updateUpcomingTasks = async()=>{
   
   let t = await getGoal();
   const temp = t.data;
+
   console.log(bChart,dChart)
+
   if(temp.length > 1){
     setBChart(true);
     setDChart(false);
@@ -126,7 +128,9 @@ const updateUpcomingTasks = async()=>{
     setDChart(true); 
     setBChart(false)
   }  // Updating current no of goals 
+
   console.log(temp.length)
+
   let tasks = temp.map((item)=> item.task);
 
   let tasksArray = tasks.map((task)=>(task.map((item)=> {
@@ -137,18 +141,20 @@ const updateUpcomingTasks = async()=>{
   })));
     
   
-const upcomingTasks = tasksArray? tasksArray.filter(task => {
+  const newUpcomingTasks = tasksArray? tasksArray.filter(task => {
   const currentDate = new Date();
   const taskDeadline = new Date(task[0].deadline);
   return taskDeadline >= currentDate;
 }): 'no tasks scheduled';
 
-upcomingTasks ? upcomingTasks.sort((a, b) => new Date(a.deadline) - new Date(b.deadline)) : 'no tasks scheduled';
+console.log(newUpcomingTasks.length,'test')
 
+newUpcomingTasks[0] ? newUpcomingTasks[0].sort((a, b) => new Date(a.deadline) - new Date(b.deadline)) : 'no tasks scheduled';
 
+console.log(newUpcomingTasks)
 
-setUpcomingTasks(upcomingTasks)
-return upcomingTasks;
+setUpcomingTasks(newUpcomingTasks)
+return newUpcomingTasks;
 
 }
 
@@ -161,12 +167,12 @@ return upcomingTasks;
 
         <Box>
         <Center>
-        <div  style={{ width: '400px', height: '300px' }}>
+        {/* <div  style={{ width: '400px', height: '300px' }}>
           {!bChart && !dChart }
           {bChart && <Bar data={chartData} options={options}></Bar> }
           {dChart && <Doughnut data={doughnutChartData}></Doughnut>}
           
-        </div>
+        </div> */}
         </Center>
         
         <Heading color='blue.400' textAlign='center'>Goals Processing</Heading>
@@ -180,6 +186,7 @@ return upcomingTasks;
         </Flex>
         
           {upcomingTasks.map((task)=>{
+            console.log('upcome',task)
             return(
               <>
               {task.map((item)=>{
