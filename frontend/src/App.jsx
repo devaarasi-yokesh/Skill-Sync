@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Routes,Route } from 'react-router-dom'
-import './styles.css'
 import HomePage from './Pages/HomePage'
 import CreatePage from './Pages/CreatePage'
 import NavBar from './elements/NavBar'

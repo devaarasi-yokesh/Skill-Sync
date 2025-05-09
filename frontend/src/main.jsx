@@ -10,20 +10,22 @@ const domain = import.meta.env.VITE_AUTH0_DOMAIN;
 const clientId = import.meta.env.VITE_AUTH0_CLIENT_ID;
 const audience = import.meta.env.VITE_AUDIENCE;
 
-console.log(audience,'that')
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     
     <BrowserRouter>
-    <Auth0Provider domain={domain} clientId={clientId} authorizationParams={{
-      redirect_uri: 'http://localhost:5173',
-      audience:audience
-    }}>
-    <Provider>
-    <App />
-    </Provider>
-    </Auth0Provider>
+
+        <Auth0Provider domain={domain} clientId={clientId} authorizationParams={{
+          redirect_uri: 'http://localhost:5174',
+          audience:audience}}>
+
+            <Provider>
+              <App />
+            </Provider>
+
+        </Auth0Provider>
+        
     </BrowserRouter>
    
   </StrictMode>,
