@@ -36,17 +36,15 @@ const HomePage = () => {
   const [bChart, setBChart] = useState(false);
   const [dChart, setDChart] = useState(false);
 
-
-
   useEffect(() => {
       getGoal();
       getResource();
       updateUpcomingTasks();
   },[getGoal]);
 
-
   //Doughnut chart
   const label = goals.map((data) => data.goal);
+  console.log(label)
   const remaining_events = Number(goals.map((data)=> data.task.length)) + Number(resources.map((rsc)=>rsc.resource.length));
   const completed_events = Number(goals.map((data)=> data.completedTasks.length)) + Number(resources.map((data)=> data.completedResources.length))
 
@@ -81,10 +79,8 @@ const HomePage = () => {
                 }
               },};
 
-
-
   const labels = goals.map((data) => data.goal);
-  const [chartData, setChartData] = useState({
+  const [barChartData, setBarChartData] = useState({
               labels:labels,
               datasets: [
                 {
@@ -105,7 +101,7 @@ const HomePage = () => {
                 }
               ]});
 
-
+  //UpcomingTasks Section
   const updateUpcomingTasks = async()=>{
     
           let t = await getGoal();
@@ -144,7 +140,6 @@ const HomePage = () => {
   }
 
 
-
 return (
     
     <Flex flexDir='column' gap='24'>
@@ -155,7 +150,7 @@ return (
             <Center>
                 <div  style={{ width: '400px', height: '300px' }}>
                   {!bChart && !dChart }
-                  {bChart && <Bar data={chartData} options={options}></Bar> }
+                  {bChart && <Bar data={barChartData} options={options}></Bar> }
                   {dChart && <Doughnut data={doughnutChartData}></Doughnut>}
                   
                 </div>
