@@ -44,10 +44,10 @@ const HomePage = () => {
 
   //Doughnut chart
   const label = goals.map((data) => data.goal);
-  console.log(label)
-  const remaining_events = Number(goals.map((data)=> data.task.length)) + Number(resources.map((rsc)=>rsc.resource.length));
-  const completed_events = Number(goals.map((data)=> data.completedTasks.length)) + Number(resources.map((data)=> data.completedResources.length))
-
+  const remaining_events = Number(goals.map((data)=> data.task.length)[0]) + Number(resources.map((rsc)=>rsc.resource.length)[0]);
+  const completed_events = Number(goals.map((data)=> data.completedTasks.length)[0]) + Number(resources.map((data)=> data.completedResources.length)[0])
+  
+  
   const [doughnutChartData, setdoughnutChartData] = useState({
               labels:['remaining','completed'],
               datasets: [
