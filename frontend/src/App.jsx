@@ -7,7 +7,7 @@ import Goals from './Pages/Goals'
 import Profile from './Pages/Profile'
 import LoginButton from './elements/LoginButton'
 import SignupButton from './elements/SignupButton'
-import LogoutButton from './elements/LogoutButton'
+
 import {useAuth0} from '@auth0/auth0-react'
 import { Center, Flex, Heading, Box } from '@chakra-ui/react'
 function App() {
@@ -23,7 +23,7 @@ function App() {
         <Center>
         <Heading size='5xl' fontWeight='bold'>Skill Sync</Heading>
         </Center>
-{/*       
+      
       {!isAuthenticated  && (
         <>
         <Flex flexDir='row' gap='6' marginTop='8' marginLeft='24'>
@@ -33,9 +33,7 @@ function App() {
         
         </>
       )}
-      {isAuthenticated && (
-        <LogoutButton/>
-      )} */}
+      
         </Flex>
        
       </Box>

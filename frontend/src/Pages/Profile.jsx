@@ -1,7 +1,13 @@
 import { Center,Box,Image,Text, Flex, Button } from '@chakra-ui/react'
 import React from 'react'
+import {useAuth0} from '@auth0/auth0-react'
+import LogoutButton from '../elements/LogoutButton'
 
 function Profile() {
+
+
+const {loginWithRedirect,isAuthenticated,isLoading,user,error} = useAuth0();
+
   return (
     <Box marginTop={4.5}>
         <Center>
@@ -20,6 +26,9 @@ function Profile() {
             <button>Delete Account</button>
             <button>Settings</button>
             <button>Sign-out</button>
+            {isAuthenticated && (
+        <LogoutButton/>
+      )}
         </Box>
     </Box>
   )

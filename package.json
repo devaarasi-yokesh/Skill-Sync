@@ -17,7 +17,7 @@
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "express-oauth2-jwt-bearer": "^1.6.1",
-    "express-openid-connect": "^2.18.0",
+    "express-openid-connect": "^2.18.1",
     "mongodb": "^6.15.0",
     "mongoose": "^8.13.2",
     "nodemon": "^3.1.9",

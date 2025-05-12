@@ -14,7 +14,7 @@ const __dirname = path.resolve();
 
 const audience = process.env.AUDIENCE;
 const baseurl = process.env.BASEURL;
-
+const clientID = process.env.CLIENTID;
 app.use(express.json());
 app.use(cors())
 
@@ -23,15 +23,18 @@ app.use('/api/res',resourceRoutes);
 console.log(audience,baseurl)
 const jwtCheck = auth({
   audience: audience,
+  clientID:clientID,
   issuerBaseURL: baseurl,
   tokenSigningAlg: 'RS256'
 });
 
-app.use('/protected',jwtCheck);
+app.use(jwtCheck);
 
-app.get('/protected', function (req, res) {
-  res.send('Secured Resource');
+app.get('/protected',(req,res) =>{
+  res.json({msg:'hello oAuth!'})
 });
+
+
 
 app.get('/api/orgs', async (req, res) => {
   const response = await fetch('https://api.coursera.org/api/courses.v1?q=search&query=react&limit=7');
