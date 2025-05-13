@@ -23,19 +23,19 @@ app.use('/api/res',resourceRoutes);
 
 console.log(audience,baseurl)
 
-const jwtCheck = auth({
+// const jwtCheck = auth({
   
-  audience: audience,
-  clientID:clientID,
-  issuerBaseURL: baseurl,
-  tokenSigningAlg: 'RS256'
-});
+//   audience: audience,
+//   clientID:clientID,
+//   issuerBaseURL: baseurl,
+//   tokenSigningAlg: 'RS256'
+// });
 
-app.use(jwtCheck);
+// app.use(jwtCheck);
 
-app.get('/protected',jwtCheck,(req,res) =>{
-  res.json({message:'You came to the private route!',user:req.auth})
-});
+// app.get('/protected',jwtCheck,(req,res) =>{
+//   res.json({message:'You came to the private route!',user:req.auth})
+// });
 
 
 
