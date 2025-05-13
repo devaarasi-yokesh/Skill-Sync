@@ -1,5 +1,6 @@
 
 import { auth } from 'express-oauth2-jwt-bearer';
+import JwksRsa from 'jwks-rsa';
 import express from 'express'
 import { connectDB } from "./config/db.js";
 import cors from 'cors'
@@ -21,7 +22,9 @@ app.use(cors())
 app.use('/api/res',resourceRoutes);
 
 console.log(audience,baseurl)
+
 const jwtCheck = auth({
+  
   audience: audience,
   clientID:clientID,
   issuerBaseURL: baseurl,
@@ -30,8 +33,8 @@ const jwtCheck = auth({
 
 app.use(jwtCheck);
 
-app.get('/protected',(req,res) =>{
-  res.json({msg:'hello oAuth!'})
+app.get('/protected',jwtCheck,(req,res) =>{
+  res.json({message:'You came to the private route!',user:req.auth})
 });
 
 

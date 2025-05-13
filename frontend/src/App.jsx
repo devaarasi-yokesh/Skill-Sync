@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Routes,Route } from 'react-router-dom'
+import Hotjar from '@hotjar/browser'
 import HomePage from './Pages/HomePage'
 import CreatePage from './Pages/CreatePage'
 import NavBar from './elements/NavBar'
@@ -10,9 +11,14 @@ import SignupButton from './elements/SignupButton'
 
 import {useAuth0} from '@auth0/auth0-react'
 import { Center, Flex, Heading, Box } from '@chakra-ui/react'
+
 function App() {
 
   const {loginWithRedirect,isAuthenticated,isLoading,user,error} = useAuth0();
+  const siteId = 6401644;
+  const hotjarVersion = 6;
+
+  Hotjar.init(siteId, hotjarVersion)
 
   return (
     <>
@@ -24,7 +30,7 @@ function App() {
         <Heading size='5xl' fontWeight='bold'>Skill Sync</Heading>
         </Center>
       
-      {!isAuthenticated  && (
+      {/* {!isAuthenticated  && (
         <>
         <Flex flexDir='row' gap='6' marginTop='8' marginLeft='24'>
           <LoginButton/>
@@ -32,7 +38,7 @@ function App() {
         </Flex>
         
         </>
-      )}
+      )} */}
       
         </Flex>
        

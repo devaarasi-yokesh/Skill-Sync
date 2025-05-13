@@ -6,7 +6,18 @@ import LogoutButton from '../elements/LogoutButton'
 function Profile() {
 
 
-const {loginWithRedirect,isAuthenticated,isLoading,user,error} = useAuth0();
+const {loginWithRedirect,isAuthenticated,getAccessTokenSilently} = useAuth0();
+
+const callApi = async() =>{
+  const token = await getAccessTokenSilently();
+  const res = await fetch('http://localhost:3000/protected', {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+  const data = await res.json();
+  console.log(data)
+}
 
   return (
     <Box marginTop={4.5}>
@@ -27,7 +38,10 @@ const {loginWithRedirect,isAuthenticated,isLoading,user,error} = useAuth0();
             <button>Settings</button>
             <button>Sign-out</button>
             {isAuthenticated && (
-        <LogoutButton/>
+        <>
+        {/* <LogoutButton/> */}
+        <button onClick={callApi}>Call API</button>
+        </>
       )}
         </Box>
     </Box>
