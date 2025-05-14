@@ -28,4 +28,14 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - run: npm run build --if-present
-    
+
+    - name: Create Sentry release
+      run: |
+          npx @sentry/cli releases new my-app@1.0.0
+          npx @sentry/cli releases files my-app@1.0.0 upload-sourcemaps ./build --rewrite
+          npx @sentry/cli releases finalize my-app@1.0.0
+      env:
+         SENTRY_AUTH_TOKEN: ${{ secrets.SENTY_AUTH_TOKEN }}
+         SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+         SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+
