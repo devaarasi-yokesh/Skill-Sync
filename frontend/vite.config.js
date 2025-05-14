@@ -1,10 +1,14 @@
+import { sentryVitePlugin } from "@sentry/vite-plugin";
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react()
-  ],
+  plugins: [react(), sentryVitePlugin({
+    org: "skillsync-9o",
+    project: "javascript-react"
+  })],
+
   server: {
     port:5174,
     proxy: {
@@ -13,5 +17,9 @@ export default defineConfig({
       } 
     },
     cors:true,
+  },
+
+  build: {
+    sourcemap: true
   }
 })
