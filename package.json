@@ -28,6 +28,7 @@
     "path": "^0.12.7"
   },
   "devDependencies": {
+    "@sentry/cli": "^2.45.0",
     "cross-env": "^7.0.3",
     "cypress": "^14.3.3"
   }
