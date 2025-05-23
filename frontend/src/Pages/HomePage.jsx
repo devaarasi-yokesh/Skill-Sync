@@ -31,14 +31,16 @@ ChartJS.register(
 
 const HomePage = () => {
 
-  const { goals,getGoal,getResource,resources} = goalStore();
+  //Global Store
+  const { goals,getGoal,getResource,resources} = goalStore(); 
+
   const [upcomingTasks, setUpcomingTasks] = useState([]);
   const [bChart, setBChart] = useState(false);
   const [dChart, setDChart] = useState(false);
 
   useEffect(() => {
-      getGoal();
-      getResource();
+      getGoal();                       // Updated goals
+      getResource();                   // Updated resources
       updateUpcomingTasks();
   },[getGoal]);
 

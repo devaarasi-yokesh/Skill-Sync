@@ -7,6 +7,8 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import resourceRoutes from './routes/goal.route.js'
 import path from 'path'
+import ddTrace from 'dd-trace'
+import winston from 'winston';
 
 const app = express();
 dotenv.config();
@@ -16,12 +18,13 @@ const __dirname = path.resolve();
 const audience = process.env.AUDIENCE;
 const baseurl = process.env.BASEURL;
 const clientID = process.env.CLIENTID;
+const datadog_Api_key = process.env.DATADOG_API_KEY;
 app.use(express.json());
 app.use(cors())
 
 app.use('/api/res',resourceRoutes);
 
-console.log(audience,baseurl)
+
 
 // const jwtCheck = auth({
   
@@ -38,7 +41,6 @@ console.log(audience,baseurl)
 // });
 
 
-
 app.get('/api/orgs', async (req, res) => {
   const response = await fetch('https://api.coursera.org/api/courses.v1?q=search&query=react&limit=7');
   const data = await response.json();
@@ -53,8 +55,41 @@ if(process.env.NODE_ENV === 'production'){
   })
 }
 
+//datadog initialization
+ddTrace.init({
+  service: 'my-mern-app',
+  env:'production'
+})
+
+//Creating custom transport for Datadog HTTP intake
+const datadogTransport = new winston.transports.Http({
+  host:'http-intake.logs.datadoghq.com',
+  path:`/v1/input/${datadog_Api_key}`,
+  ssl: true,
+  port: 443,
+  headers: {
+    'DD-API-KEY': datadog_Api_key,
+    'Content-Type': 'application/json'
+  },
+});
+
+//logging info to datalog logger via http port and no agent
+const logger = winston.createLogger({
+  level: 'info',
+  format: winston.format.json(),
+  defaultMeta: {service: 'my-mern-app'},
+  transports: [
+    datadogTransport,
+    new winston.transports.Console(),
+  ],
+});
+
+//Example log
+logger.info('App started successfully');
+logger.error('Something went wrong')
 
 app.listen(3000, ()=> {
     connectDB();
     console.log('Server run at http://localhost:3000')
 })
+

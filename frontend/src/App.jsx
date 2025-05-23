@@ -15,9 +15,10 @@ import { Center, Flex, Heading, Box } from '@chakra-ui/react'
 function App() {
 
   const {loginWithRedirect,isAuthenticated,isLoading,user,error} = useAuth0();
+
+  // Initializing hotjar
   const siteId = 6401644;
   const hotjarVersion = 6;
-
   Hotjar.init(siteId, hotjarVersion)
 
   return (

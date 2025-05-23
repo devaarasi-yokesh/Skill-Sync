@@ -14,7 +14,9 @@
   "license": "ISC",
   "dependencies": {
     "@hotjar/browser": "^1.0.9",
+    "axios": "^1.9.0",
     "cors": "^2.8.5",
+    "dd-trace": "^5.52.0",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "express-jwt": "^8.5.1",
@@ -25,7 +27,8 @@
     "mongoose": "^8.13.2",
     "node": "^24.0.1",
     "nodemon": "^3.1.9",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "winston": "^3.17.0"
   },
   "devDependencies": {
     "@sentry/cli": "^2.45.0",
