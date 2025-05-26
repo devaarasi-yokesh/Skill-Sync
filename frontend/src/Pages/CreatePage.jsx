@@ -53,20 +53,20 @@ const handleAdd = async() => {
 
   return (
     <div className='mt-9'>
-      <Heading fontSize='3xl' marginBottom='8' color='blue.400'>Create Goal</Heading>
+      <Heading fontSize='3xl' marginBottom='8' color='blue.400' className='createPageHeading'>Create Goal</Heading>
     <form>
       <Flex flexDirection='column' gap='8'>
       <div>
-      < Text  htmlFor="inlinegoal">
+      < Text  htmlFor="goalName">
         Goal
       </Text>
-      <Input onChange={(e) => setNewRes({...newRes,goal:e.target.value})} value={newRes.goal} id="inlinegoal" type="text" placeholder="Python" variant='subtle'/>
+      <Input onChange={(e) => setNewRes({...newRes,goal:e.target.value})} value={newRes.goal} name="goalName" type="text" placeholder="Python" variant='subtle'/>
     </div>
       <div >
           <Text  htmlFor="inlinetask">
             Initial Task
           </Text>
-          <Input onChange={(e)=>handleInput(e)} value={newRes.task.name} variant='subtle' placeholder="Write First Program in Python"/>
+          <Input onChange={(e)=>handleInput(e)} value={newRes.task.name} name='taskName' variant='subtle' placeholder="Write First Program in Python"/>
         
       </div>
       
@@ -74,7 +74,7 @@ const handleAdd = async() => {
           <Text htmlFor="inlineDeadline">
             Deadline
           </Text>
-          <Input onChange={(e)=>handleInput(e)} value={newRes.task.deadline} variant='subtle' type='date'  placeholder="https://python_beginner_course"/>
+          <Input onChange={(e)=>handleInput(e)} value={newRes.task.deadline} name='deadline' variant='subtle' type='date'  placeholder="https://python_beginner_course"/>
     
       </div>
 
@@ -88,7 +88,7 @@ const handleAdd = async() => {
       </div> */}
 
       <div>
-          <Button onClick={handleAdd} w='full'>
+          <Button onClick={handleAdd} w='full' className='addButton'>
             Add
           </Button>
       </div>
