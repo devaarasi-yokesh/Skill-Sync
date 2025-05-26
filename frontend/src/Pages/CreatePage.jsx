@@ -6,6 +6,12 @@ import { Button, Flex, Heading, Input, Text } from '@chakra-ui/react';
 
 const CreatePage = () => {
 
+// Somewhere in your component
+useEffect(() => {
+  throw new Error("Test Sentry Error");
+}, []);
+
+
 const [newRes, setNewRes] = useState({
   goal:"",
   task:{
