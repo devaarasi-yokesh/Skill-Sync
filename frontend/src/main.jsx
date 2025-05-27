@@ -25,7 +25,7 @@ createRoot(document.getElementById('root')).render(
 
         {/* Authentication */}
         <Auth0Provider domain={domain} clientId={clientId} authorizationParams={{
-          redirect_uri: 'http://localhost:5174',
+          redirect_uri: 'window.location.origin',
           audience:audience}}>
 
             {/* Chakra Provider */}

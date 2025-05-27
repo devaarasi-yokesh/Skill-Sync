@@ -9,6 +9,7 @@ import resourceRoutes from './routes/goal.route.js'
 import path from 'path'
 import ddTrace from 'dd-trace'
 import winston from 'winston';
+import Profile from '../backend/model/profile.model.js'
 
 const app = express();
 dotenv.config();
@@ -26,19 +27,21 @@ app.use('/api/res',resourceRoutes);
 
 
 
-// const jwtCheck = auth({
+const jwtCheck = auth({
   
-//   audience: audience,
-//   clientID:clientID,
-//   issuerBaseURL: baseurl,
-//   tokenSigningAlg: 'RS256'
-// });
+  audience: audience,
+  issuerBaseURL: baseurl,
+  tokenSigningAlg: 'RS256'
+});
 
-// app.use(jwtCheck);
 
-// app.get('/protected',jwtCheck,(req,res) =>{
-//   res.json({message:'You came to the private route!',user:req.auth})
-// });
+
+app.get('/protected',jwtCheck,async(req,res) =>{
+
+  const userId = req.auth.payload.sub; //Creating Auth0 userID
+  const userProfile = await Profile.findOne({userId});
+  res.json(userProfile);
+});
 
 
 app.get('/api/orgs', async (req, res) => {
@@ -87,6 +90,8 @@ const logger = winston.createLogger({
 //Example log
 logger.info('App started successfully');
 logger.error('Something went wrong')
+
+app.use(cors({ origin: 'https://skill-sync-2bln.onrender.com/'}))
 
 app.listen(3000, ()=> {
     connectDB();
