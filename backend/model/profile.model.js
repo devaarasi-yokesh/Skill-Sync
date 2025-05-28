@@ -9,4 +9,6 @@ const profileSchema = new mongoose.Schema({
     email: String,
 });
 
-export default profileSchema;
+const Profile = mongoose.model('Profile',profileSchema);
+
+export default Profile;
