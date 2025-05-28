@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import {goalStore} from '../store/goal.store'
 import { nanoid } from 'nanoid'
+import { useEffect } from 'react';
 import { Button, Flex, Heading, Input, Text } from '@chakra-ui/react';
 
 
