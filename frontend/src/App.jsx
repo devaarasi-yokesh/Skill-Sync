@@ -12,6 +12,7 @@ import SignupButton from './elements/SignupButton'
 import {useAuth0} from '@auth0/auth0-react'
 import { Center, Flex, Heading, Box } from '@chakra-ui/react'
 import LogoutButton from './elements/LogoutButton'
+import SyncProfile from './elements/SyncProfile'
 
 function App() {
 
@@ -32,6 +33,7 @@ function App() {
         <Heading size='5xl' fontWeight='bold'>Skill Sync</Heading>
         </Center>
       
+      <SyncProfile/>
       {!isAuthenticated ? (
         <>
         <Flex flexDir='row' gap='6' marginTop='8' marginLeft='24'>
