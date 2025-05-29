@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "@auth0/auth0-react": "^2.3.0",
-    "@chakra-ui/react": "^3.16.1",
+    "@chakra-ui/form-control": "^2.2.0",
+    "@chakra-ui/icons": "^2.2.4",
+    "@chakra-ui/react": "^3.19.1",
     "@emotion/react": "^11.14.0",
     "@sentry/react": "^9.18.0",
     "@sentry/tracing": "^7.120.3",

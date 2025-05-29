@@ -8,7 +8,7 @@ import Goals from './Pages/Goals'
 import Profile from './Pages/Profile'
 import LoginButton from './elements/LoginButton'
 import SignupButton from './elements/SignupButton'
-
+import './styles.css'
 import {useAuth0} from '@auth0/auth0-react'
 import { Center, Flex, Heading, Box } from '@chakra-ui/react'
 import LogoutButton from './elements/LogoutButton'
@@ -25,42 +25,118 @@ function App() {
 
   return (
     <>
-    <Center>
-    <Flex flexDirection='column' gap='14'>
-      <Box>
-        <Flex>
+    <Box 
+  bg="var(--background)" 
+  minH="100vh" 
+  p={4}
+  fontFamily="'Inter', sans-serif"
+>
+  <Flex 
+    flexDirection='column' 
+    gap='14' 
+    width="100%" 
+    maxWidth="1200px"
+  >
+    {/* Header Section */}
+    <Box 
+      position="sticky" 
+      top="0" 
+      zIndex="100"
+      bg="var(--card)" 
+      py={4}
+      borderRadius="8px"
+      boxShadow="0 2px 10px rgba(0,0,0,0.05)"
+    >
+      <Flex 
+        justifyContent="space-between" 
+        alignItems="center"
+        px={6}
+      >
         <Center>
-        <Heading size='5xl' fontWeight='bold'>Skill Sync</Heading>
+          <Heading 
+            size='2xl' 
+            fontWeight='bold'
+            color="var(--secondary)"
+            fontFamily="'Poppins', sans-serif"
+          >
+            Skill Sync
+          </Heading>
         </Center>
-      
-      <SyncProfile/>
-      {!isAuthenticated ? (
-        <>
-        <Flex flexDir='row' gap='6' marginTop='8' marginLeft='24'>
-          <LoginButton/>
-          <SignupButton/>
-        </Flex>
         
-        </>
-      ): <LogoutButton/>}
-      
+        <Flex alignItems="center" gap={6}>
+          <SyncProfile/>
+          {!isAuthenticated ? (
+            <Flex flexDir='row' gap='4'>
+              <LoginButton 
+                bg="var(--primary)" 
+                color="white"
+                _hover={{ bg: "var(--secondary)" }}
+                borderRadius="6px"
+                px={6}
+                py={3}
+                fontWeight="500"
+              />
+              <SignupButton 
+                bg="transparent"
+                color="var(--primary)"
+                border="2px solid var(--primary)"
+                _hover={{ bg: "rgba(67, 97, 238, 0.1)" }}
+                borderRadius="6px"
+                px={6}
+                py={3}
+                fontWeight="500"
+              />
+            </Flex>
+          ) : (
+            <LogoutButton 
+              bg="transparent"
+              color="var(--primary)"
+              border="2px solid var(--primary)"
+              _hover={{ bg: "rgba(67, 97, 238, 0.1)" }}
+              borderRadius="6px"
+              px={6}
+              py={3}
+              fontWeight="500"
+            />
+          )}
         </Flex>
-       
-      </Box>
-      <Box>
+      </Flex>
+    </Box>
+
+    {/* Main Content */}
+    <Box 
+      bg="var(--card)" 
+      borderRadius="8px" 
+      boxShadow="0 4px 6px rgba(0,0,0,0.05)"
+      p={8}
+      minH="60vh"
+    >
       <Routes>
-        <Route path='/' element={<HomePage/>}> </Route>
-        <Route path='/create' element={<CreatePage/>}></Route>
-        <Route path='/goals' element={<Goals />}></Route>
-        <Route path='/profile' element={<Profile />}></Route>
+        <Route 
+          path='/' 
+          element={<HomePage/>} 
+          className="nav-link"
+        />
+        <Route path='/create' element={<CreatePage/>} />
+        <Route path='/goals' element={<Goals />} />
+        <Route path='/profile' element={<Profile />} />
       </Routes>
-      </Box>
-      <Box>
-      <NavBar></NavBar>
-      </Box>
-    </Flex>
-   {/* <button onClick={() => {throw new Error("This is your first error!");}}>Break the world</button>; */}
-    </Center>
+    </Box>
+
+    {/* Navigation Bar */}
+    <Box 
+      bg="var(--card)" 
+      borderRadius="8px" 
+      boxShadow="0 4px 6px rgba(0,0,0,0.05)"
+      py={4}
+    >
+      <NavBar 
+        bg="transparent"
+        colorScheme="var(--primary)"
+      />
+    </Box>
+  </Flex>
+</Box>
     </>
   )
 }

@@ -43,21 +43,27 @@ app.get('/protected',jwtCheck,async(req,res) =>{
   res.json(userProfile);
 });
 
-app.post('/create-profile', jwtCheck, async (req, res) =>{
-  const userId = req.auth.payload.sub;
+// Store the user auth details when they sign-up
+app.post('/create-profile', jwtCheck, async (req, res) => {
+  try {
+    const userId = req.auth.payload.sub;
+    const existing = await Profile.findOne({ userId });
+    if (existing) return res.json(existing);
 
-  const existing = await Profile.findOne({userId});
-  if(existing) return res.json(existing);
+    const newProfile = new Profile({
+      userId,
+      name: req.body.name || req.auth.payload.name,
+      email: req.body.email || req.auth.payload.email
+    });
 
-  const newProfile = new Profile({
-    userId,
-    name: req.body.name || req.auth.payload.name,
-    email: req.body.email || req.auth.payload.email
-  });
+    await newProfile.save();
+    res.status(201).json(newProfile);
+  } catch (error) {
+    console.error('Error creating profile:', error);
+    res.status(500).json({ error: 'Failed to create profile' });
+  }
+});
 
-  await newProfile.save();
-  res.status(201).json(newProfile);
-})
 
 app.get('/api/orgs', async (req, res) => {
   const response = await fetch('https://api.coursera.org/api/courses.v1?q=search&query=react&limit=7');
@@ -102,7 +108,7 @@ const logger = winston.createLogger({
   ],
 });
 
-//Example log
+//Example log - Sentry
 logger.info('App started successfully');
 logger.error('Something went wrong')
 

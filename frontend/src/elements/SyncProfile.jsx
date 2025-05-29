@@ -11,21 +11,29 @@ function SyncProfile(){
         const syncUserProfile = async () => {
             if(!isAuthenticated) return;
 
-            const token = await getAccessTokenSilently();
+           try{
+                const token = await getAccessTokenSilently();
 
             await axios.post(
-                'api/create-profile', 
-                {},
+                '/create-profile', 
+                {
+                    name: user.name,
+                    email: user.email,
+                },
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 }
             );
+           } catch(e){
+            console.error('Error syncing profile:', e);
+           }
+            
         };
 
         syncUserProfile();
-    },[isAuthenticated])
+    },[isAuthenticated,user])
 
     // This component renders nothing visible
     return null;

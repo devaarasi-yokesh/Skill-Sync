@@ -26,6 +26,7 @@ createRoot(document.getElementById('root')).render(
         {/* Authentication */}
         <Auth0Provider domain={domain} clientId={clientId} authorizationParams={{
           redirect_uri: 'https://skill-sync-2bln.onrender.com',
+          scope: 'openid profile email',
           audience:audience}}>
 
             {/* Chakra Provider */}

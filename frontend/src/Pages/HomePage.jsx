@@ -13,9 +13,12 @@ import {
 } from 'chart.js';
 import {Bar, Doughnut} from 'react-chartjs-2'
 import { useState } from 'react';
-import { Box, Button, Center, Flex, Heading, Text } from '@chakra-ui/react';
+import {Flex, Box, Button, Heading, Text, Center, 
+  Badge, VStack, Icon, Spinner, ButtonGroup } from '@chakra-ui/react';
 import { isBefore, isToday, isTomorrow, compareAsc, parseISO } from 'date-fns';
 import { goalStore } from '../store/goal.store';
+import { BsCalendar, BsCalendar2Check } from 'react-icons/bs';
+
 
 ChartJS.register(
   CategoryScale,
@@ -141,54 +144,144 @@ const HomePage = () => {
 
   }
 
+  const formatDate = (dateString) => {
+  const options = { 
+    weekday: 'short', 
+    month: 'short', 
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  };
+  return new Date(dateString).toLocaleDateString(undefined, options);
+};
 
 return (
     
-    <Flex flexDir='column' gap='24'>
+   <Flex flexDir='column' gap='8' p={6} bg='var(--background)' minH='100vh'>
 
-      <Button w='full' className='addGoalButton'><Link to='/create'>+ add goal</Link></Button>
+  {/* Add Goal Button */}
+  <Button 
+    as={Link} 
+    to='/create'
+    w='full' 
+    bg='var(--primary)'
+    color='white'
+    _hover={{ bg: 'var(--secondary)', transform: 'translateY(-2px)' }}
+    _active={{ transform: 'scale(0.98)' }}
+    py={7}
+    borderRadius='12px'
+    fontSize='xl'
+    fontWeight='semibold'
+    boxShadow='0 4px 12px rgba(67, 97, 238, 0.25)'
+    
+    className='addGoalButton'
+  >
+    Add New Goal
+  </Button>
 
-      <Box>
-            <Center>
-                <div  style={{ width: '400px', height: '300px' }}>
-                  {!bChart && !dChart }
-                  {bChart && <Bar data={barChartData} options={options}></Bar> }
-                  {dChart && <Doughnut data={doughnutChartData}></Doughnut>}
-                  
-                </div>
-            </Center>
-            
-            <Heading color='blue.400' textAlign='center'>Goals Processing</Heading>
-        </Box>
-
-
-
-      <Box>
-
-          <Flex gap='40' flexDir='row'>
-          <Heading><Text>Upcoming Events</Text></Heading>
-          </Flex>
-          
-            {upcomingTasks.map((task)=>{
-                  return(
-                      <>
-
-                      {task.map((item)=>{
-
-                          return (
-                          <>
-                          <p>{item.name} </p>
-                          <p> {item.deadline}</p>
-                          </>
-                          
-                      )})}
-                      
-                      </>
-            )})}
-
-        </Box>
-
+  {/* Goals Processing Section */}
+  <Box 
+    bg='var(--card)' 
+    borderRadius='xl' 
+    boxShadow='0 4px 6px rgba(0,0,0,0.05)'
+    p={6}
+    textAlign='center'
+  >
+    <Flex justifyContent='space-between' alignItems='center' mb={4}>
+      <Heading size='lg' color='var(--secondary)' fontWeight='600'>
+        Goals Progress
+      </Heading>
+      <ButtonGroup size='sm'>
+        <Button 
+          variant={bChart ? 'solid' : 'outline'} 
+          colorScheme='blue'
+          onClick={() => setChartType(true, false)}
+        >
+          Bar
+        </Button>
+        <Button 
+          variant={dChart ? 'solid' : 'outline'} 
+          colorScheme='blue'
+          onClick={() => setChartType(false, true)}
+        >
+          Doughnut
+        </Button>
+      </ButtonGroup>
     </Flex>
+
+    <Center>
+      <Box w='100%' maxW='400px' h='300px'>
+        {!bChart && !dChart && (
+          <Center h='100%' flexDir='column'>
+            <Text color='gray.500' mb={4}>Select a chart type</Text>
+            <Spinner size='xl' color='blue.400' />
+          </Center>
+        )}
+        {bChart && <Bar data={barChartData} options={options} />}
+        {dChart && <Doughnut data={doughnutChartData} />}
+      </Box>
+    </Center>
+  </Box>
+
+  {/* Upcoming Events Section */}
+  <Box 
+    bg='var(--card)' 
+    borderRadius='xl' 
+    boxShadow='0 4px 6px rgba(0,0,0,0.05)'
+    p={6}
+  >
+    <Flex justifyContent='space-between' alignItems='center' mb={6}>
+      <Heading size='lg' color='var(--secondary)' fontWeight='600'>
+        Upcoming Tasks
+      </Heading>
+      <Badge colorScheme='blue' fontSize='md' px={3} py={1} borderRadius='full'>
+        {upcomingTasks.length} tasks
+      </Badge>
+    </Flex>
+
+    {upcomingTasks.length === 0 ? (
+      <Center py={8} flexDir='column'>
+        <Icon as={BsCalendar2Check} boxSize={10} color='gray.300' mb={3} />
+        <Text color='gray.500' fontSize='lg'>No upcoming tasks</Text>
+        <Text color='gray.400' mt={2}>Add tasks to your goals to see them here</Text>
+      </Center>
+    ) : (
+      <VStack spacing={4} align='stretch'>
+        {upcomingTasks.map((taskGroup, groupIndex) => (
+          <React.Fragment key={groupIndex}>
+            {taskGroup.map((task, taskIndex) => (
+              <Flex 
+                key={`${groupIndex}-${taskIndex}`}
+                bg='white'
+                borderRadius='lg'
+                p={4}
+                boxShadow='sm'
+                borderLeft='4px solid'
+                borderColor={task.priority === 'high' ? 'red.400' : task.priority === 'medium' ? 'orange.400' : 'blue.400'}
+                _hover={{ transform: 'translateY(-2px)', boxShadow: 'md' }}
+                transition='all 0.2s'
+              >
+                <Box flex='1'>
+                  <Text fontWeight='600' fontSize='lg'>{task.name}</Text>
+                  <Flex mt={2} color='gray.500' fontSize='sm' alignItems='center'>
+                    <Icon as={BsCalendar} mr={2} />
+                    <Text>{formatDate(task.deadline)}</Text>
+                  </Flex>
+                </Box>
+                <Badge 
+                  alignSelf='flex-start'
+                  colorScheme={task.priority === 'high' ? 'red' : task.priority === 'medium' ? 'orange' : 'blue'}
+                >
+                  {task.priority} priority
+                </Badge>
+              </Flex>
+            ))}
+          </React.Fragment>
+        ))}
+      </VStack>
+    )}
+  </Box>
+</Flex>
   )
 }
 
