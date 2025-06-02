@@ -1,8 +1,12 @@
-import React,{useState,useEffect, useCallback} from 'react'
+import {useState,useEffect, useCallback} from 'react'
 import { goalStore } from '../store/goal.store';
 import { IoMdAdd } from "react-icons/io";
 import { nanoid } from 'nanoid';
-import { Button, Heading, Box, Text,Input, Flex, Image, Popover, Portal } from '@chakra-ui/react';
+import { Box, Heading, Text, Flex, VStack, SimpleGrid,
+  Button, ButtonGroup, Badge, Checkbox, Icon,
+  Popover,  Portal,Input, AspectRatio, Image,
+  Center, PopoverTrigger, PopoverContent, PopoverArrow, PopoverHeader, PopoverBody } from '@chakra-ui/react';
+import { BsClipboard, BsFileText, BsBook } from 'react-icons/bs';
 import ResourceSection from './ResourceSection';
 
 
@@ -22,7 +26,7 @@ const GoalCard = () => {
     const [courses, setCourses] = useState([]);
     const [goalName, setGoalName] = useState('');
     const [checkCompleted,setCompleted] = useState(false);
-    const [selctedItem,setSelectedItem] = useState('');
+    const [selectedItem,setSelectedItem] = useState('');
  
 
 
@@ -99,9 +103,8 @@ const toggleTask = (id) => {
    setAddTask(true);
    setHideAddButton(false);
    
-   setTarget(id
-)
-  ;
+   setTarget(id);
+  
 }
 
 
@@ -131,155 +134,269 @@ const deleteTaskValue = async(data,val) => {
 }
 
 
-
   return (
-    <>
-     {goals.map((data,index)=>{
-   
-    return(
-   
-     <div className='border-b border-dashed m-5'>
-      <Heading fontSize='2xl' textTransform='uppercase' textAlign='center' color='blue.400'>
-        {data.goal}
-      </Heading>
+      <>
+      {goals.map((data, index) => {
+          console.log("Article val:", data.goal,data._id, typeof data);
 
-     
-      <Box>
-      <Heading fontSize='xl' color='blue.400'>Tasks</Heading>
-
-         <Box marginTop='4.5'>
-            {data.task ? data.task.map((val,i)=> {
-            return(
-               <>
-               <Text key={val.id} color='gray.400'>
-               <input type="checkbox" onChange={()=>deleteTaskValue(data,val)} key={i}/> {val.name ? val.name : 'No tasks'}
-               </Text> 
-               </>
-            )
-            }) : 'No tasks added'}
-         </Box>
-         
-         <Popover.Root positioning={{ placement:'right-end'}}>
-            
-             <Popover.Trigger onClick={()=>toggleTask(data._id)} asChild><IoMdAdd />
-            </Popover.Trigger>
-           
-            <Portal>
-               <Popover.Positioner>
-                  <Popover.Content css={{'--popover-bg':'colors.blue.300'}}>
-                     <Popover.Arrow/>
-                     <Popover.Body>
-                        <Popover.Title css={{'--popover-bg':'colors.black.300'}}>create task</Popover.Title>
-                        <Flex flexDir='column' gap='2.5'   marginTop='2.5'>
-                           {addTask &&  (target === data._id) ? (<>
-
-                           <Box>
-                           <Text htmlFor="task">task</Text> &nbsp;
-                           <Input type="text" id='task' onChange={(e)=> setTask({...task,name:e.target.value})} value={task.name}/> <br/>
-                           </Box>
-
-                           <Box>
-                           <Text htmlFor="deadline">deadline</Text> &nbsp;
-                           <Input type="date" id='deadline'  onChange={(e)=> setTask({...task,deadline:e.target.value})} value={task.deadline}/><br/>
-                           </Box>
-                           <Button onClick={()=>{updateTaskValue({data})}}>add</Button>
-                           </>) : ''} 
-                           </Flex>
-                     </Popover.Body>
-                  </Popover.Content>
-               </Popover.Positioner>
-            </Portal>
-         </Popover.Root>
-      </Box>
-
-      <ResourceSection/>
-
-      <Flex flexDirection='column' gap='4.5' marginTop={'8'}>
-      <Heading color='blue.400'>Recommended resources</Heading>
-      <Box>
-      <Heading>Articles</Heading>
-      
-      {articles.map((a)=>{
          return(
-           
-            <>
-             {a.map((val,i) => {
-               return(
-                  <>
-                  {i < 2 ? <Flex gap={'8'} flexDir={'row'} color={'gray.800'}>
-               
-               <Text fontSize='large' marginY='4.5' color={checkCompleted && selctedItem === i ? 'green.400' : 'gray.800'} key={i}> {val}</Text>
-               <Button>Add</Button>
-               <Button>Remove</Button>
-               <Text  margin={4.5} rounded={'md'} borderWidth={'1px'} padding={'2px'} onClick={()=>{setCompleted(true);setSelectedItem(i)}} cursor={'pointer'}>Complete</Text>
-               </Flex> : '' }
-                  
-                  </>
-               )
-             })}
-            
-            </>
-         )
-      })}
-      </Box>
 
-     <Box>
-     <Heading>Videos</Heading>
-         {videos.map((a)=>{
-            return(
-               <>
-                  {a.map((val,i) => {
-                  return(
-                     <>
-               
-               <Box margin='2'>
-               <Text marginTop='2.5'> {val[0]}</Text>
-               <Image src={val[1]} alt=""  marginTop='2.5'/>
-               <Flex gap={'8'} marginTop={4} flexDir={'row'} color={'gray.800'}>
-               <Button>Add</Button>
-               <Button>Remove</Button>
-               </Flex>
-               </Box>
-                     </>
-                  )
-                })}
-               </>
-               
-               
-              
-            )
-         })}
-     </Box>
+               <Box key={index} bg="var(--card)"
+                  borderRadius="xl"
+                  boxShadow="0 4px 6px rgba(0,0,0,0.05)"
+                  p={6}
+                  mb={8}
+                  position="relative">
 
-     <Box>
-     <Heading>Courses</Heading>
-         {courses.map((a,i)=>{
-            return(
-               <>
-                 {a.map((b)=>{
-                  return(
-                     <>
-                     <Text>{b}</Text>
-                     <Flex gap={'8'} marginTop={4} flexDir={'row'} color={'gray.800'}>
-                     <Button>Add</Button>
-                     <Button>Remove</Button>
+                     {/* Goal Header */}
+                     <Heading 
+                     fontSize="2xl" 
+                     textTransform="uppercase" 
+                     textAlign="center" 
+                     color="var(--primary)"
+                     fontWeight="600"
+                     pb={4}
+                     mb={6}
+                     borderBottom="1px solid"
+                     borderColor="var(--border)"
+                     >
+                     {data.goal}
+                     </Heading>
+
+                     {/* Tasks Section */}
+                     <Box mb={8}>
+                     <Flex alignItems="center" mb={4}>
+
+                        <Heading fontSize="xl" color="var(--primary)" fontWeight="600">Tasks</Heading>
+
+                         <Popover.Root placement="right-end">
+                           <Popover.Trigger
+ 
+                                    size="sm" 
+                                    ml="auto"
+                                    variant="outline"
+                                    colorScheme="blue"
+                                    onClick={() => toggleTask(data._id)} >
+                                    Add Task
+
+                           </Popover.Trigger>
+
+                           <Portal>
+                           <Popover.Content>
+                              <Popover.Arrow />
+
+                              <Popover.Header fontWeight="600">Create New Task</Popover.Header>
+
+                              <Popover.Body>
+                                 <VStack spacing={4} align="stretch">
+
+                                    <label>Task Name</label>
+                                    <Input 
+                                       type="text"
+                                       value={task.name}
+                                       onChange={(e) => setTask({...task, name: e.target.value})}/>
+
+                                    <label>Deadline</label>
+                                    <Input 
+                                       type="date"
+                                       value={task.deadline}
+                                       onChange={(e) => setTask({...task, deadline: e.target.value})} />
+
+                                    <Button 
+                                       colorScheme="blue"
+                                       onClick={() => updateTaskValue({data})}> Add Task
+                                    </Button>
+
+                                 </VStack>
+                              </Popover.Body>
+
+                           </Popover.Content>
+                           </Portal>
+                        </Popover.Root> 
+
+
                      </Flex>
-                     </>
-                  )
-                 })}
-                  
-               </>
-               
-               
-              
-            )
-         })}
-     </Box>
-      </Flex>
-    </div>)
-   })}
-   
-    </>
+
+                     <VStack spacing={3} align="stretch">
+                              {data.task && data.task.length > 0 ? 
+                              data.task.map((val, i) => {
+                                 return(
+                                     <Flex 
+                                 key={`${data._id}-${i}`}
+                                 align="center"
+                                 p={3}
+                                 bg="var(--background)"
+                                 borderRadius="md"
+                                 _hover={{ bg: "rgba(67, 97, 238, 0.05)" }}>
+{/* 
+                                    <Checkbox 
+                                       colorScheme="blue"
+                                       mr={3}
+                                       onChange={() => deleteTaskValue(data, val)}/> */}
+                                    
+                                    <Checkbox.Root defaultChecked variant='outline' onChange={() => deleteTaskValue(data, val)}>
+                                       <Checkbox.HiddenInput />
+                                       <Checkbox.Control />
+                                       <Checkbox.Label></Checkbox.Label>
+                                       </Checkbox.Root>
+
+                                    <Box flex="1">
+
+                                       <Text fontWeight="500">{val.name || 'Untitled task'}</Text>
+
+                                       <Text fontSize="sm" color="gray.500">
+
+                                           Deadline: {val.deadline ? new Date(val.deadline).toLocaleDateString() : 'No deadline'}
+
+                                       </Text>
+                                    
+
+                                    </Box>
+                              </Flex>
+                                 )}
+                             
+
+                           )  : (
+
+                           <Center py={4} flexDir="column">
+
+                              <Icon as={BsClipboard} boxSize={8} color="gray.300" mb={2} />
+
+                              <Text color="gray.500">No tasks yet</Text>
+
+                           </Center>
+                           )
+                        }
+
+                     </VStack>
+
+                     </Box>
+
+                     {/* Resources Section */}
+                     <ResourceSection />
+
+                     {/* Recommended Resources */}
+                     <Box mt={8}>
+
+                        <Heading color="var(--primary)" mb={6} fontSize="xl" fontWeight="600">
+                           Recommended Resources
+                        </Heading>
+
+                        {/* Articles */}
+                        <Box mb={8}>
+                              <Flex align="center" mb={4}>
+
+                                 <Heading fontSize="lg" color="var(--secondary)" fontWeight="600">
+                                 Articles
+                                 </Heading>
+
+                                 <Badge ml={2} colorScheme="blue" borderRadius="full">
+                                 {articles.flat().length}
+                                 </Badge>
+
+                              </Flex>
+                     
+                              <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
+
+                                 {articles.flat().slice(0, 2).map((val, i) => (
+                                 
+                                    <Flex 
+                                    key={i}
+                                    p={4}
+                                    bg="var(--background)"
+                                    borderRadius="md"
+                                    align="center">
+                                       <Icon as={BsFileText} color="var(--primary)" mr={3} />
+
+                                       <Text flex="1" fontWeight="500" color={checkCompleted && selectedItem === i ? 'green.500' : 'inherit'}>
+                                          {val}
+                                       </Text>
+
+                                       <ButtonGroup size="sm">
+
+                                          <Button variant="outline" colorScheme="blue">Add</Button>
+
+                                          <Button variant="outline" colorScheme="red">Remove</Button>
+
+                                          {/* <Button variant={checkCompleted && selectedItem === i ? "solid" : "outline"} 
+                                          colorScheme={checkCompleted && selectedItem === i ? "green" : "gray"}
+                                          onClick={() => {setCompleted(true); setSelectedItem(i)}}>
+                                          {checkCompleted && selectedItem === i ? "Completed" : "Complete"}
+                                          </Button> */}
+                                          
+                                       </ButtonGroup>
+                                 </Flex>
+                                 ))}
+
+                              </SimpleGrid>
+
+                        </Box>
+
+                        {/* Videos */}
+                        <Box mb={8}>
+
+                           <Heading fontSize="lg" color="var(--secondary)" mb={4} fontWeight="600">
+                              Videos
+                           </Heading>
+                           
+                           <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
+                              {videos.flat().slice(0, 2).map((val, i) => (
+                              <Box 
+                                 key={i}
+                                 border="1px solid"
+                                 borderColor="var(--border)"
+                                 borderRadius="md"
+                                 overflow="hidden"
+                              >
+                                 <AspectRatio ratio={16/9}>
+                                    <Image 
+                                    src={val[1]} 
+                                    alt={val[0]} 
+                                    objectFit="cover"
+                                    />
+                                 </AspectRatio>
+                                 <Box p={4}>
+                                    <Text fontWeight="500" mb={3}>{val[0]}</Text>
+                                    <ButtonGroup size="sm">
+                                    <Button variant="outline" colorScheme="blue">Add</Button>
+                                    <Button variant="outline" colorScheme="red">Remove</Button>
+                                    </ButtonGroup>
+                                 </Box>
+                              </Box>
+                              ))}
+                           </SimpleGrid>
+                        </Box>
+
+                        {/* Courses */}
+                        <Box>
+                           <Heading fontSize="lg" color="var(--secondary)" mb={4} fontWeight="600">
+                              Courses
+                           </Heading>
+                           
+                           <VStack spacing={3} align="stretch">
+                              {courses.flat().slice(0, 3).map((val, i) => (
+                              <Flex 
+                                 key={i}
+                                 p={4}
+                                 bg="var(--background)"
+                                 borderRadius="md"
+                                 align="center"
+                              >
+                                 <Icon as={BsBook} color="var(--primary)" mr={3} />
+                                 <Text flex="1" fontWeight="500">{val}</Text>
+                                 <ButtonGroup size="sm">
+                                    <Button variant="outline" colorScheme="blue">Add</Button>
+                                    <Button variant="outline" colorScheme="red">Remove</Button>
+                                 </ButtonGroup>
+                              </Flex>
+                              ))}
+                           </VStack>
+                        </Box>
+                     </Box>
+               </Box>
+
+         )})}
+      </>
   )
 }
 

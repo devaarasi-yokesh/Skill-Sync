@@ -87,4 +87,4 @@ const handleResourceValue = async() =>{
   )
 }
 
-export default ResourceSection
+export default ResourceSection;
