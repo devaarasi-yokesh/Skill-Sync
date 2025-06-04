@@ -2,11 +2,12 @@ import {useState,useEffect, useCallback} from 'react'
 import { goalStore } from '../store/goal.store';
 import { IoMdAdd } from "react-icons/io";
 import { nanoid } from 'nanoid';
+import { Link } from 'react-router-dom';
 import { Box, Heading, Text, Flex, VStack, SimpleGrid,
   Button, ButtonGroup, Badge, Checkbox, Icon,
   Popover,  Portal,Input, AspectRatio, Image,
   Center, PopoverTrigger, PopoverContent, PopoverArrow, PopoverHeader, PopoverBody } from '@chakra-ui/react';
-import { BsClipboard, BsFileText, BsBook } from 'react-icons/bs';
+import { BsClipboard, BsFileText, BsBook,BsBullseye, BsPlusCircle } from 'react-icons/bs';
 import ResourceSection from './ResourceSection';
 
 
@@ -136,8 +137,30 @@ const deleteTaskValue = async(data,val) => {
 
   return (
       <>
-      {goals.map((data, index) => {
-          console.log("Article val:", data.goal,data._id, typeof data);
+      {goals.length === 0 ? (
+           <Center height="50vh" flexDirection="column">
+                  <Icon as={BsBullseye} boxSize={12} color="var(--primary)" mb={4} />
+
+                  <Heading size="lg" mb={3} color="var(--primary)">
+                   No Goals Added Yet
+                  </Heading>
+
+                  <Text mb={6} color="gray.500" maxW="md" textAlign="center">
+                  Start your journey by creating your first goal. Click the button below to begin.
+                  </Text>
+
+                  <Button 
+                  as={Link} 
+                  to='/create'
+                  colorScheme="blue" 
+                  size="lg"
+                  leftIcon={<BsPlusCircle />}
+                  >
+                  Create New Goal
+                  </Button>
+          </Center>
+      ):( goals.map((data, index) => {
+         
 
          return(
 
@@ -165,52 +188,86 @@ const deleteTaskValue = async(data,val) => {
 
                      {/* Tasks Section */}
                      <Box mb={8}>
-                     <Flex alignItems="center" mb={4}>
+                     <Flex justify="space-between" align="center" mb={6} pb={4} borderBottom="1px solid" borderColor="var(--border)">
 
                         <Heading fontSize="xl" color="var(--primary)" fontWeight="600">Tasks</Heading>
 
                          <Popover.Root placement="right-end">
-                           <Popover.Trigger
- 
-                                    size="sm" 
-                                    ml="auto"
-                                    variant="outline"
-                                    colorScheme="blue"
-                                    onClick={() => toggleTask(data._id)} >
-                                    Add Task
-
-                           </Popover.Trigger>
+                           <Popover.Anchor>
+                              <Popover.Trigger
+                                       colorScheme="blue"
+                                       variant="outline"
+                                       size="sm"
+                                       px={6}
+                                       leftIcon={<BsPlusCircle size={14} />}
+                                       fontWeight="600"
+                                       borderRadius="md"
+                                       borderWidth="1.5px"
+                                       _hover={{ bg: "blue.50" }}
+                                       _active={{ transform: "scale(0.98)" }}
+                                       >
+                                       Add Task
+                              </Popover.Trigger>
+                           </Popover.Anchor>
 
                            <Portal>
-                           <Popover.Content>
-                              <Popover.Arrow />
+                           <Popover.Positioner>
+                              <Popover.Content bg="white" 
+                                 borderRadius="lg" 
+                                 boxShadow="0 10px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04)"
+                                 border="1px solid"
+                                 borderColor="gray.200"  zIndex="popover">
+                                 <Popover.Arrow fill="white"/>
 
-                              <Popover.Header fontWeight="600">Create New Task</Popover.Header>
+                                 <Popover.Header fontWeight="600" 
+                                    fontSize="lg" 
+                                    px={4} 
+                                    py={3}
+                                    borderBottom="1px solid"
+                                    borderColor="gray.100"
+                                    bg="gray.50"
+                                    borderTopRadius="lg">Create New Task</Popover.Header>
 
-                              <Popover.Body>
-                                 <VStack spacing={4} align="stretch">
+                                 <Popover.Body px={4} py={5}>
+                                    <VStack spacing={4} align="stretch">
 
-                                    <label>Task Name</label>
-                                    <Input 
-                                       type="text"
-                                       value={task.name}
-                                       onChange={(e) => setTask({...task, name: e.target.value})}/>
+                                       <Text >Task Name</Text>
+                                       <Input 
+                                             type="text"
+                                             size="sm"
+                                             borderRadius="md"
+                                             borderColor="gray.300"
+                                             _focus={{ borderColor: "blue.400", boxShadow: "0 0 0 1px #3182ce" }}
+                                             value={task.name}
+                                             onChange={(e) => setTask({...task, name: e.target.value})}
+                                             placeholder="Enter task name"/>
 
-                                    <label>Deadline</label>
-                                    <Input 
-                                       type="date"
-                                       value={task.deadline}
-                                       onChange={(e) => setTask({...task, deadline: e.target.value})} />
+                                       <Text>Deadline</Text>
+                                       <Input 
+                                          type="date"
+                                          size="sm"
+                                          borderRadius="md"
+                                          borderColor="gray.300"
+                                          _focus={{ borderColor: "blue.400", boxShadow: "0 0 0 1px #3182ce" }}
+                                          value={task.deadline}
+                                          onChange={(e) => setTask({...task, deadline: e.target.value})} />
 
-                                    <Button 
-                                       colorScheme="blue"
-                                       onClick={() => updateTaskValue({data})}> Add Task
-                                    </Button>
+                                       <Button 
+                                             colorScheme="blue"
+                                             size="sm"
+                                             fontWeight="600"
+                                             mt={2}
+                                             py={2}
+                                             onClick={() => updateTaskValue({data})}
+                                             _hover={{ transform: "translateY(-1px)" }}
+                                             _active={{ transform: "translateY(0)" }}> Add Task
+                                       </Button>
 
-                                 </VStack>
-                              </Popover.Body>
+                                    </VStack>
+                                 </Popover.Body>
 
-                           </Popover.Content>
+                              </Popover.Content>
+                           </Popover.Positioner>
                            </Portal>
                         </Popover.Root> 
 
@@ -219,26 +276,25 @@ const deleteTaskValue = async(data,val) => {
 
                      <VStack spacing={3} align="stretch">
                               {data.task && data.task.length > 0 ? 
-                              data.task.map((val, i) => {
+                                 data.task.map((val, i) => {
+
                                  return(
+                                     
                                      <Flex 
-                                 key={`${data._id}-${i}`}
-                                 align="center"
-                                 p={3}
-                                 bg="var(--background)"
-                                 borderRadius="md"
-                                 _hover={{ bg: "rgba(67, 97, 238, 0.05)" }}>
-{/* 
-                                    <Checkbox 
-                                       colorScheme="blue"
-                                       mr={3}
-                                       onChange={() => deleteTaskValue(data, val)}/> */}
+                                       key={`${data._id}-${i}`}
+                                       align="center"
+                                       p={3}
+                                       bg="var(--background)"
+                                       borderRadius="md"
+                                       _hover={{ bg: "rgba(67, 97, 238, 0.05)" }}>
+
                                     
-                                    <Checkbox.Root defaultChecked variant='outline' onChange={() => deleteTaskValue(data, val)}>
+                                    <Checkbox.Root defaultChecked variant='outline' colorScheme="blue"
+                                       mr={3} onChange={() => deleteTaskValue(data, val)}>
                                        <Checkbox.HiddenInput />
                                        <Checkbox.Control />
                                        <Checkbox.Label></Checkbox.Label>
-                                       </Checkbox.Root>
+                                    </Checkbox.Root>
 
                                     <Box flex="1">
 
@@ -395,7 +451,7 @@ const deleteTaskValue = async(data,val) => {
                      </Box>
                </Box>
 
-         )})}
+         )}))}
       </>
   )
 }

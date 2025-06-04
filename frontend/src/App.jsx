@@ -1,11 +1,10 @@
 import { useState } from 'react'
 import { Routes,Route } from 'react-router-dom'
-import Hotjar from '@hotjar/browser'
-import HomePage from './Pages/HomePage'
-import CreatePage from './Pages/CreatePage'
+import HomePage from './pages/HomePage'
+import CreatePage from './pages/CreatePage'
 import NavBar from './elements/NavBar'
-import Goals from './Pages/Goals'
-import Profile from './Pages/Profile'
+import Goals from './pages/Goals'
+import Profile from './pages/Profile'
 import LoginButton from './elements/LoginButton'
 import SignupButton from './elements/SignupButton'
 import './styles.css'
@@ -18,10 +17,10 @@ function App() {
 
   const {loginWithRedirect,isAuthenticated,isLoading,user,error} = useAuth0();
 
-  // Initializing hotjar
-  const siteId = 6401644;
-  const hotjarVersion = 6;
-  Hotjar.init(siteId, hotjarVersion)
+  // // Initializing hotjar
+  // const siteId = 6401644;
+  // const hotjarVersion = 6;
+  // Hotjar.init(siteId, hotjarVersion)
 
   return (
     <>
