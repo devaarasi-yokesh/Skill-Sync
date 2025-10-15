@@ -1,15 +1,14 @@
 import mongoose from "mongoose";
 
-const resourceSchema = new mongoose.Schema({
-    resource:{
-        type: Array,
-        required: true
-    },
-    completedResources:{
-        type: Array,
-        required: true
+
+const resourceSchema = new mongoose.Schema(
+    {
+       name: { type: String, required: true},
+       link: { type: String, required: true },
+       id: { type: String, required: true },
+       completed: { type: Boolean, default: false },
     }
-},
+,
 {
     timestamps: true
 });

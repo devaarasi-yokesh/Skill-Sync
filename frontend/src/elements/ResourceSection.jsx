@@ -11,7 +11,8 @@ import { Box,
   IconButton, 
   ButtonGroup,
   Popover, Portal,
-  Icon} from '@chakra-ui/react'
+  Icon,
+  Link} from '@chakra-ui/react'
 import React, { useEffect } from 'react'
 import { useState } from 'react';
 import { 
@@ -46,6 +47,13 @@ const deleteResource = () => {
    return
 }
 
+function Testing(){
+  {resources.map((res, groupIndex) => {
+        
+   console.log('Testing Resources',res.name)
+  })
+}
+}
   return (
 
    <Box marginTop="10"  bg="var(--card)" borderRadius="xl" boxShadow="0 4px 6px rgba(0,0,0,0.05)">
@@ -135,10 +143,10 @@ const deleteResource = () => {
   {/* Resources List */}
   {resources.length > 0 ? (
     <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
-      {resources.map((resourceGroup, groupIndex) => (
-        resourceGroup.resource.map((res, resIndex) => (
+      {resources.map((res, resIndex) => (
+        
           <Flex 
-            key={`${groupIndex}-${resIndex}`}
+            key={`-${resIndex}`}
             bg="var(--background)"
             p={4}
             borderRadius="md"
@@ -147,43 +155,41 @@ const deleteResource = () => {
             borderColor="var(--border)"
             _hover={{ boxShadow: "0 2px 5px rgba(0,0,0,0.08)" }}
           >
+           
             <Icon as={BsLink45Deg} color="var(--primary)" boxSize={5} mr={3} />
             
             <Box flex="1" minW="0">
-              <Text 
+              <Link 
                 fontWeight="500" 
                 isTruncated
                 color="var(--primary)"
+                href={`${res.link}`}
               >
-                {res.name || "Untitled Resource"}
-              </Text>
-              <Text 
-                fontSize="sm" 
-                color="gray.500" 
-                isTruncated
-                title={res.link}
-              >
-                {res.link.replace(/(^\w+:|^)\/\//, '')}
-              </Text>
+                {res.name.replace(/(^\w+:|^)\/\//, '') || "Untitled Resource"}
+              </Link>
+              
             </Box>
             
             <ButtonGroup size="sm">
               <IconButton 
                 icon={<BsBoxArrowUpRight />} 
                 aria-label="Open resource"
-                variant="ghost"
+                variant=""
+                cursor={'pointer'}
+                color={'black'}
                 onClick={() => window.open(res.link, '_blank')}
               />
               <IconButton 
                 icon={<BsTrash />} 
                 aria-label="Delete resource"
-                variant="ghost"
+                variant=""
+                cursor={'pointer'}
                 colorScheme="red"
                 onClick={() => deleteResource(resourceGroup, res)}
               />
             </ButtonGroup>
           </Flex>
-        ))
+        
       ))}
     </SimpleGrid>
   ) : (

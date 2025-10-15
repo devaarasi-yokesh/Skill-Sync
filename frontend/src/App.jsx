@@ -34,7 +34,7 @@ function App() {
     flexDirection='column' 
     gap='14' 
     width="100%" 
-    maxWidth="1200px"
+    maxWidth="1788px"
   >
     {/* Header Section */}
     <Box 
@@ -50,6 +50,9 @@ function App() {
         justifyContent="space-between" 
         alignItems="center"
         px={6}
+        height={'100%'}
+        width={'100%'}
+        maxWidth={'1788px'}
       >
         <Center>
           <Heading 

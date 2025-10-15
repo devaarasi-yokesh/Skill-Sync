@@ -14,11 +14,15 @@ import ResourceSection from './ResourceSection';
 
 
 
+
+
+
 const GoalCard = () => {
 
-    const {goals,getGoal,updateGoal,deleteGoal,getArticle,getVideo,createCompletedGoal,getCourse} = goalStore();
+    const {goals,getGoal,updateGoal,deleteGoal,getArticle,getVideo,createCompletedGoal,getCourse,resources, createResource} = goalStore();
     const [task, setTask] = useState({name:"",deadline:"",id:""});
     const [addTask, setAddTask] = useState(false);
+   //  const[resource, setResource] = useState({name:'',link:'',id:'',completed:false})
     const [hideAddButton, setHideAddButton] = useState(true);
     const [goalId, setGoalId] = useState(null);
     const [target, setTarget] = useState(null);
@@ -35,33 +39,55 @@ const GoalCard = () => {
       
       const rs = await getGoal();
       const goals = rs.data;
-      console.log(goals)
+      console.log(goals,'goalname')
       const goalNames = goals.map(async(d)=>{
         
 
          const val =  d.goal.toLowerCase();
          const article = await getArticle(val);
-      
-      const articleValues = article ? await Promise.all(article.data.map((v)=> v.title)):'no article retrieved';
-      setArticles([...articles,articleValues]);
+      console.log('fetched article',article)
+
+      let articleValues = []
+      article ? await Promise.all(article.data.map((v)=> {
+         let temp = {name:'',
+                     link:'',
+                     id:''
+         };
+         temp.name = v.title;
+         temp.link = v.url;
+         temp.id = nanoid();
+        
+         articleValues = [...articleValues,temp]
+         
+       } )):'no article retrieved';
+ 
+       setArticles([...articles,articleValues]);
       });
       
       goals.map(async(d)=>{
          const val =  d.goal.toLowerCase();
          console.log(val)
          const video = await getVideo(val);
-         const videoValues = video.data.items.map((item)=>[item.snippet.title,item.snippet.thumbnails.default.url]);
+         const videoValues = video.data.items.map((item)=>[item.snippet.title,item.id.videoId,item.snippet.thumbnails.default.url]);
          setVideos([...videos,videoValues]);
          
-      console.log(video.data.items.map((item)=>[item.snippet.title,item.snippet.thumbnails.default.url]))
+      
       })
       
-      const res = await fetch('http://localhost:3000/api/orgs');
+      goals.map(async(d)=>{
+      
+      const val =  d.goal.toLowerCase();
+      const res = await fetch(`https://learn.microsoft.com/api/catalog/?search=${val}`);
       const data = await res.json();
-      const courseValues = data.elements.map((val)=>val.name);
-      setCourses([...courses,courseValues])
-      console.log(data.elements.map((val)=>val.name),courseValues)
-   
+      const regex = new RegExp(`\\b${val}\\b`, 'i');
+      // const courses = {name}
+      console.log( 'course testing',(data.courses.filter((course)=> regex.test(course.title))).map((data)=>data.title).slice(0,5) )
+      const courseName = (data.courses.filter((course)=> regex.test(course.title))).map((data)=>data.title).slice(0,5)
+      const courseLink = (data.courses.filter((course)=> regex.test(course.title))).map((data)=>data.url).slice(0,5)
+      const courseValues = [{name:courseName,link:courseLink}];
+      setCourses(courseValues)
+      console.log('courses',courseValues)
+      })
    },[goalName])
 
 useEffect(() => {
@@ -72,7 +98,7 @@ useEffect(() => {
 
 
 
-const updateTaskValue = async({data})=>{
+const addTaskValue = async({data})=>{
 
    if(!task.name && !task.deadline){
       alert('Please fill the required fields')
@@ -99,41 +125,64 @@ const updateTaskValue = async({data})=>{
 }
 
 
-const toggleTask = (id) => {
+// const toggleTask = (id) => {
    
-   setAddTask(true);
-   setHideAddButton(false);
+//    setAddTask(true);
+//    setHideAddButton(false);
    
-   setTarget(id);
+//    setTarget(id);
   
-}
+// }
 
 
-const deleteTaskValue = async(data,val) => {
+const deleteTaskValue = async({resource}) => {
    data.task = data.task.filter((task) => task.name !== val.name  );
    data.completedTasks = [...data.completedTasks,val]
    
-   console.log(data,"Testing here")
    const response = await updateGoal(data._id,data);
-   console.log(response.message,goals)
 
    const updatedgoals = await Promise.all(goals.map(async(item)=> {
       if(item._id === data._id){
          if(item.task.length === 0){
            const newG =  await createCompletedGoal({goal:data.goal,id:data._id})
            const newVal = await deleteGoal(data._id)
-           console.log(newG)
-           console.log(newVal.message)
          }
-         console.log(data._id)
-         
          
       }
    }));
 
-   console.log(updatedgoals)
 }
 
+const addResource = async (resource) => {
+   //Articles Section
+   // console.log(resource.val.name,resource)
+   // let temp = {name:'',link:'',id:'',completed:false}
+   // temp.name = resource.val.name;
+   // temp.link = resource.val.link
+   // temp.id = resource.val.id;
+
+   // const res = await createResource(temp);
+   
+   
+   console.log(resource,courses)
+
+   //Videos Section
+   // let temp = {name:'',link:'',id:nanoid(),completed:false}
+   // temp.name = resource[0];
+   // temp.link = `www.youtube.com/watch/v=${resource[1]}`;
+   // console.log(temp)
+   // const res = await createResource(temp)
+
+   //Courses Section
+   let temp = {name:'',link:'',id:nanoid(),completed:false}
+   temp.name = resource.name;
+   temp.link = resource.link;
+   const res = await createResource(temp)
+   console.log('removing added resource',courses.slice(1),courses)
+   setCourses(courses.slice(1))
+   
+
+}
 
   return (
       <>
@@ -258,7 +307,7 @@ const deleteTaskValue = async(data,val) => {
                                              fontWeight="600"
                                              mt={2}
                                              py={2}
-                                             onClick={() => updateTaskValue({data})}
+                                             onClick={() => addTaskValue({data})}
                                              _hover={{ transform: "translateY(-1px)" }}
                                              _active={{ transform: "translateY(0)" }}> Add Task
                                        </Button>
@@ -355,7 +404,7 @@ const deleteTaskValue = async(data,val) => {
                               <SimpleGrid columns={{ base: 1, md: 2 }} spacing={4}>
 
                                  {articles.flat().slice(0, 2).map((val, i) => (
-                                 
+                                   
                                     <Flex 
                                     key={i}
                                     p={4}
@@ -363,14 +412,14 @@ const deleteTaskValue = async(data,val) => {
                                     borderRadius="md"
                                     align="center">
                                        <Icon as={BsFileText} color="var(--primary)" mr={3} />
-
+                                        
                                        <Text flex="1" fontWeight="500" color={checkCompleted && selectedItem === i ? 'green.500' : 'inherit'}>
-                                          {val}
+                                          {val.name}
                                        </Text>
 
                                        <ButtonGroup size="sm">
 
-                                          <Button variant="outline" colorScheme="blue">Add</Button>
+                                          <Button variant="outline" colorScheme="blue" onClick={()=>addResource({val})}>Add</Button>
 
                                           <Button variant="outline" colorScheme="red">Remove</Button>
 
@@ -406,7 +455,7 @@ const deleteTaskValue = async(data,val) => {
                               >
                                  <AspectRatio ratio={16/9}>
                                     <Image 
-                                    src={val[1]} 
+                                    src={val[2]} 
                                     alt={val[0]} 
                                     objectFit="cover"
                                     />
@@ -414,7 +463,7 @@ const deleteTaskValue = async(data,val) => {
                                  <Box p={4}>
                                     <Text fontWeight="500" mb={3}>{val[0]}</Text>
                                     <ButtonGroup size="sm">
-                                    <Button variant="outline" colorScheme="blue">Add</Button>
+                                    <Button variant="outline" colorScheme="blue" onClick={()=>addResource(val)}>Add</Button>
                                     <Button variant="outline" colorScheme="red">Remove</Button>
                                     </ButtonGroup>
                                  </Box>
@@ -430,7 +479,9 @@ const deleteTaskValue = async(data,val) => {
                            </Heading>
                            
                            <VStack spacing={3} align="stretch">
-                              {courses.flat().slice(0, 3).map((val, i) => (
+                              {courses.map((val, i) => (
+                                 val.name.map((course,j)=>(
+                                 <>
                               <Flex 
                                  key={i}
                                  p={4}
@@ -439,12 +490,15 @@ const deleteTaskValue = async(data,val) => {
                                  align="center"
                               >
                                  <Icon as={BsBook} color="var(--primary)" mr={3} />
-                                 <Text flex="1" fontWeight="500">{val}</Text>
+                                 
+                                       <Text flex="1" fontWeight="500">{course}</Text>
+                                 
                                  <ButtonGroup size="sm">
-                                    <Button variant="outline" colorScheme="blue">Add</Button>
+                                    <Button variant="outline" colorScheme="blue" onClick={()=> addResource({name:course,link:val.link[i]})}>Add</Button>
                                     <Button variant="outline" colorScheme="red">Remove</Button>
                                  </ButtonGroup>
                               </Flex>
+                              </>))
                               ))}
                            </VStack>
                         </Box>

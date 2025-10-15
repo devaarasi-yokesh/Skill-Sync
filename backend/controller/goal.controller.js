@@ -92,19 +92,19 @@ export const createCompletedGoal = async(req,res) =>{
 
 
 export const createResource = async(req,res) =>{
-    const rsc = req.body;
-    console.log(rsc)
-    if(!rsc.resource ){
+    const resource = req.body;
+    console.log('Backend resource check',resource)
+    if(!resource ){
         return res.status(400).json({success:false, message:"Please provide all fields"});
     }
 
-    const newRes = new Resource(rsc);
+    const newRes = new Resource(resource);
 
     try{
        await newRes.save(); 
-       return res.status(200).json({success:true, message:"Goal successfully added",data:newRes});
+       return res.status(200).json({success:true, message:"Resource successfully added",data:newRes});
     }catch(error){
-        return res.status(500).json({success:false, message:"Server Error"});
+        return res.status(500).json({success:false, message:"Server Error - createResource"});
     }
 }
 
@@ -114,7 +114,7 @@ export const getResource = async(req,res) =>{
        const resources = await Resource.find({}); 
        return res.status(200).json({success:true,data:resources});
     }catch(error){
-        return res.status(500).json({success:false, message:"Server Error"});
+        return res.status(500).json({success:false, message:"Server Error - getResource"});
     }
 }
 
@@ -128,6 +128,6 @@ export const getVideos = async (req,res)=>{
 &type=video
 &key=${key}`).then((data)=> data.json());
 
-    console.log(videos.items.map((item)=> JSON.stringify(item,null,2)))
+    
     res.status(200).json({success:true, message:'Articles found',data:videos});
 }

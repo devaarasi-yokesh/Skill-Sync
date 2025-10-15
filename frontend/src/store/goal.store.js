@@ -95,7 +95,7 @@ export const goalStore = create((set)=>({
 
 
     createResource: async(newRes) => {
-        if(!newRes.resource ){
+        if(!newRes.link && !newRes.name && !newRes.id && !newRes.completed ){
             return {success:false, message:"Please fill in all fields."}
         }
         const res = await fetch('api/res/rsc',{
@@ -107,10 +107,10 @@ export const goalStore = create((set)=>({
         })
        
         const data = await res.json();
-        console.log(data.data)
+        console.log('Global Store - createResource',data)
         set((state)=> ({resources:[...state.resources, data.data]}));
 
-        return{success:true, message: "Product created successfully",data:data.data};
+        return{success:true, message: "Resource added successfully",data:data.data};
     },
 
     getResource: async()=>{
@@ -162,7 +162,7 @@ export const goalStore = create((set)=>({
         };
         const res = await fetch (`https://collection-for-coursera-courses.p.rapidapi.com/rapidapi/course/get_institution.php`, options);
       const data = await res.json();
-        console.log(data)
+        console.log('course fetch testing',data)
       }
       
 }));
