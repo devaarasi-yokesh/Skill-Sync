@@ -19,7 +19,7 @@ export const getGoal = async(req,res) =>{
 
 export const createGoal = async(req,res) =>{
     const goal = req.body;
-    console.log(goal)
+    console.log('Backend Message',goal)
     if(!goal.goal || !goal.task ){
         return res.status(400).json({success:false, message:"Please provide all fields"});
     }
